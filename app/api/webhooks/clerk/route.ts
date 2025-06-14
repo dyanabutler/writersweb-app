@@ -1,6 +1,7 @@
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 import { Webhook } from "svix"
+import { clerkClient } from "@clerk/nextjs/server"
 import { supabase } from "@/lib/supabase/server"
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
   const body = JSON.stringify(payload)
 
   // Create a new Svix instance with your secret.
-  const wh = new Webhook(webhookSecret)
+  const wh = new Webhook(webhookSecret as string)
 
   let evt: any
 
@@ -107,6 +108,22 @@ async function handleUserCreated({
   createdAt: number
 }) {
   const fullName = [firstName, lastName].filter(Boolean).join(" ")
+
+  // Set initial metadata in Clerk (free tier by default)
+  try {
+    const client = await clerkClient()
+    await client.users.updateUserMetadata(id, {
+      publicMetadata: {
+        subscription: "free",
+        subscriptionStatus: "active",
+        subscriptionTier: "free"
+      }
+    })
+    console.log(`Metadata set for user ${id}`)
+  } catch (metadataError) {
+    console.error("Error setting user metadata:", metadataError)
+    // Don't throw - continue with profile creation
+  }
 
   const { error } = await supabase.from("profiles").insert({
     id,

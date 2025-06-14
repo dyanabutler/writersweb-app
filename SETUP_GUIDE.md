@@ -41,9 +41,6 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 Run the following SQL in your Supabase SQL editor:
 
 ```sql
--- Enable RLS
-ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
-
 -- Create profiles table (synced with Clerk)
 CREATE TABLE profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -165,14 +162,11 @@ ALTER TABLE locations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE scenes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE story_images ENABLE ROW LEVEL SECURITY;
 
--- Create RLS policies (basic version - you may need to adjust based on your user ID strategy)
-CREATE POLICY "Users can view own stories" ON stories FOR SELECT USING (user_id = current_setting('app.current_user_id'));
-CREATE POLICY "Users can insert own stories" ON stories FOR INSERT WITH CHECK (user_id = current_setting('app.current_user_id'));
-CREATE POLICY "Users can update own stories" ON stories FOR UPDATE USING (user_id = current_setting('app.current_user_id'));
-CREATE POLICY "Users can delete own stories" ON stories FOR DELETE USING (user_id = current_setting('app.current_user_id'));
-
--- Add similar policies for other tables...
--- (You'll need to expand these based on your specific needs)
+-- Create basic RLS policies (for now, allow authenticated users to access their own data)
+CREATE POLICY "Users can view own stories" ON stories FOR SELECT USING (auth.uid()::text = user_id);
+CREATE POLICY "Users can insert own stories" ON stories FOR INSERT WITH CHECK (auth.uid()::text = user_id);
+CREATE POLICY "Users can update own stories" ON stories FOR UPDATE USING (auth.uid()::text = user_id);
+CREATE POLICY "Users can delete own stories" ON stories FOR DELETE USING (auth.uid()::text = user_id);
 
 -- Create indexes for performance
 CREATE INDEX idx_stories_user_id ON stories(user_id);

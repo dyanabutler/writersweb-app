@@ -1,11 +1,13 @@
 "use client"
 
-import { SignIn, SignUp, useUser } from "@clerk/nextjs"
+import { useState } from "react"
+import { SignIn, SignUp, useUser, useSignUp, useSignIn } from "@clerk/nextjs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { X, Cloud } from "lucide-react"
 import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { VerificationStep } from "./verification-step"
 
 interface ClerkAuthWrapperProps {
   isOpen: boolean
@@ -15,10 +17,58 @@ interface ClerkAuthWrapperProps {
 export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
   const { tokens } = useDesignSystem()
   const { isSignedIn } = useUser()
+  const { signUp } = useSignUp()
+  const { signIn } = useSignIn()
+  const [showVerification, setShowVerification] = useState(false)
+  const [verificationMode, setVerificationMode] = useState<"signUp" | "signIn">("signUp")
+  const [verificationEmail, setVerificationEmail] = useState("")
 
   // Auto-close when user signs in
   if (isSignedIn && isOpen) {
     onClose()
+  }
+
+  // Check if we need to show verification
+  const needsVerification = 
+    (signUp?.status === "missing_requirements" && signUp?.unverifiedFields?.includes("email_address")) ||
+    (signIn?.status === "needs_first_factor" && signIn?.supportedFirstFactors?.some(f => f.strategy === "email_code"))
+
+  // Show verification step if needed
+  if (showVerification || needsVerification) {
+    const email = verificationEmail || 
+      signUp?.emailAddress || 
+      signIn?.identifier || ""
+
+    const mode = signUp?.status === "missing_requirements" ? "signUp" : "signIn"
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <Card className="w-full max-w-md" style={{ backgroundColor: tokens.colors.background.secondary }}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2" style={{ color: tokens.colors.text.primary }}>
+                <Cloud className="w-5 h-5" style={{ color: tokens.colors.icons.accent }} />
+                Verify Your Email
+              </CardTitle>
+              <Button variant="ghost" size="sm" onClick={onClose}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <VerificationStep
+              mode={mode}
+              emailAddress={email}
+              onBack={() => setShowVerification(false)}
+              onSuccess={() => {
+                setShowVerification(false)
+                onClose()
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   if (!isOpen) return null
@@ -58,6 +108,7 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
                   },
                 }}
                 redirectUrl="/"
+                fallbackRedirectUrl="/"
               />
             </TabsContent>
 
@@ -75,6 +126,7 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
                   },
                 }}
                 redirectUrl="/"
+                fallbackRedirectUrl="/"
               />
             </TabsContent>
           </Tabs>

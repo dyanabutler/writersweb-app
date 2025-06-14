@@ -4,21 +4,32 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Search, Bell } from "lucide-react"
 import { useDesignSystem } from "@/lib/contexts/design-system-context"
-import { AuthModal } from "@/components/auth/auth-modal"
+import { ClerkAuthWrapper } from "@/components/auth/clerk-auth-wrapper"
 import { UserMenu } from "@/components/auth/user-menu"
 import { SyncStatus } from "@/components/sync/sync-status"
+import { useAuth } from "@/lib/auth/clerk-auth-context"
 
 export function Header() {
   const { tokens } = useDesignSystem()
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const { user, isSignedIn, loading } = useAuth()
 
-  const handleAuthSuccess = (userData: any) => {
-    setUser(userData)
-  }
-
-  const handleLogout = () => {
-    setUser(null)
+  if (loading) {
+    return (
+      <header
+        className="shadow-sm border-b border-gray-200 px-6 py-4"
+        style={{ backgroundColor: tokens.colors.background.secondary }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="h-10 w-64 bg-gray-200 rounded animate-pulse" />
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="h-8 w-20 bg-gray-200 rounded animate-pulse" />
+          </div>
+        </div>
+      </header>
+    )
   }
 
   return (
@@ -48,14 +59,14 @@ export function Header() {
           </div>
 
           <div className="flex items-center space-x-4">
-            {user && <SyncStatus userSubscription={user.subscription} />}
+            {isSignedIn && <SyncStatus />}
 
             <Button variant="ghost" size="sm">
               <Bell className="w-5 h-5" style={{ color: tokens.colors.icons.secondary }} />
             </Button>
 
-            {user ? (
-              <UserMenu user={user} onLogout={handleLogout} />
+            {isSignedIn && user ? (
+              <UserMenu user={user} onLogout={() => {}} />
             ) : (
               <Button onClick={() => setShowAuthModal(true)}>Sign In</Button>
             )}
@@ -63,7 +74,7 @@ export function Header() {
         </div>
       </header>
 
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onAuthSuccess={handleAuthSuccess} />
+      <ClerkAuthWrapper isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </>
   )
 }
