@@ -14,6 +14,7 @@ interface AuthContextType {
   loading: boolean
   signOut: () => Promise<void>
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>
+  refreshProfile: () => Promise<void>
   isSignedIn: boolean
 }
 
@@ -111,12 +112,20 @@ export function ClerkAuthProvider({ children }: { children: React.ReactNode }) {
     return { error }
   }
 
+  const refreshProfile = async () => {
+    if (user) {
+      setLoading(true)
+      await fetchProfile(user.id)
+    }
+  }
+
   const value = {
     user,
     profile,
     loading: loading || !isLoaded,
     signOut,
     updateProfile,
+    refreshProfile,
     isSignedIn: !!user,
   }
 

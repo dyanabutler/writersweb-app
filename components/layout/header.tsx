@@ -2,12 +2,20 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Search, Bell } from "lucide-react"
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Search, Bell, Settings, HelpCircle, Palette, User, LogOut } from "lucide-react"
 import { useDesignSystem } from "@/lib/contexts/design-system-context"
 import { ClerkAuthWrapper } from "@/components/auth/clerk-auth-wrapper"
-import { UserMenu } from "@/components/auth/user-menu"
 import { SyncStatus } from "@/components/sync/sync-status"
 import { useAuth } from "@/lib/auth/clerk-auth-context"
+import Image from "next/image"
+import Link from "next/link"
 
 export function Header() {
   const { tokens } = useDesignSystem()
@@ -47,8 +55,8 @@ export function Header() {
               />
               <input
                 type="text"
-                placeholder="Search chapters, characters..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Search stories, characters..."
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-80"
                 style={{
                   backgroundColor: tokens.colors.background.primary,
                   color: tokens.colors.text.primary,
@@ -66,18 +74,60 @@ export function Header() {
             </Button>
 
             {isSignedIn && user ? (
-              <UserMenu 
-                user={{
-                  id: user.id,
-                  name: user.fullName || user.firstName || "User",
-                  email: user.emailAddresses?.[0]?.emailAddress || "",
-                  subscription: (user.publicMetadata?.subscription as "free" | "pro") || "free",
-                  avatar: user.imageUrl || ""
-                }} 
-                onLogout={async () => {
-                  await signOut()
-                }} 
-              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center gap-2 p-2">
+                    <Image
+                      src={user.imageUrl || "/placeholder.svg"}
+                      alt={user.fullName || "User"}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                    <span className="hidden md:block text-sm font-medium">
+                      {user.firstName || "User"}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-2 py-1.5">
+                    <p className="text-sm font-medium">{user.fullName || user.firstName}</p>
+                    <p className="text-xs text-gray-500">{user.emailAddresses?.[0]?.emailAddress}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center">
+                      <User className="w-4 h-4 mr-2" />
+                      My Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings" className="flex items-center">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem asChild>
+                    <Link href="/help" className="flex items-center">
+                      <HelpCircle className="w-4 h-4 mr-2" />
+                      Help & Support
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem 
+                    onClick={async () => await signOut()}
+                    className="text-red-600 focus:text-red-600"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Button onClick={() => setShowAuthModal(true)}>Sign In</Button>
             )}

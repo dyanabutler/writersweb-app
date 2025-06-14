@@ -10,7 +10,8 @@ import { Switch } from "@/components/ui/switch"
 import { ProfilePictureUpload } from "./profile-picture-upload"
 import { useAuth } from "@/lib/auth/clerk-auth-context"
 import { useDesignSystem } from "@/lib/contexts/design-system-context"
-import { Save, X, Loader2 } from "lucide-react"
+import { Save, X, Loader2, Settings } from "lucide-react"
+import Link from "next/link"
 
 interface ProfileEditorProps {
   initialData: {
@@ -68,8 +69,14 @@ export function ProfileEditor({
     <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Edit Profile</CardTitle>
+          <CardTitle>Quick Profile Edit</CardTitle>
           <div className="flex gap-2">
+            <Button variant="outline" asChild>
+              <Link href="/settings">
+                <Settings className="w-4 h-4 mr-2" />
+                Full Settings
+              </Link>
+            </Button>
             <Button
               onClick={handleSave}
               disabled={loading || !hasChanges}
@@ -83,7 +90,7 @@ export function ProfileEditor({
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
-                  Save Changes
+                  Save
                 </>
               )}
             </Button>
@@ -114,9 +121,6 @@ export function ProfileEditor({
             placeholder="Your display name"
             disabled={loading}
           />
-          <p className="text-xs" style={{ color: tokens.colors.text.muted }}>
-            This is how your name will appear on your public profile
-          </p>
         </div>
 
         {/* Bio */}
@@ -151,8 +155,11 @@ export function ProfileEditor({
 
         {hasChanges && (
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
+            <p className="text-sm text-blue-800 flex items-center justify-between">
               You have unsaved changes
+              <Link href="/settings" className="text-blue-600 hover:text-blue-800 underline text-xs">
+                Go to Settings for more options
+              </Link>
             </p>
           </div>
         )}

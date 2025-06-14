@@ -8,21 +8,36 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ProfilePictureUpload } from "@/components/profile/profile-picture-upload"
 import { useAuth } from "@/lib/auth/clerk-auth-context"
-import { useDataLayerContext } from "@/lib/content/data-layer"
-import { Share2, ExternalLink, Crown, Save } from "lucide-react"
+import { DesignSystemEditor } from "@/components/design-system/design-system-editor"
+import { UserProfile } from "@clerk/nextjs"
+
+import { 
+  Share2, 
+  ExternalLink, 
+  Crown, 
+  Save, 
+  User,
+  Loader2,
+  Palette,
+  HelpCircle,
+  Shield
+} from "lucide-react"
 import { useDesignSystem } from "@/lib/contexts/design-system-context"
 import Link from "next/link"
-import { supabase } from "@/lib/supabase/client"
 
 export default function SettingsPage() {
-  const { user, profile, updateProfile } = useAuth()
-  const { dataLayer } = useDataLayerContext()
+  const { user, profile, refreshProfile } = useAuth()
   const { tokens } = useDesignSystem()
   
   const [loading, setLoading] = useState(false)
-  const [stories, setStories] = useState<any[]>([])
+  const [hasChanges, setHasChanges] = useState(false)
+  
   const [formData, setFormData] = useState({
+    full_name: "",
+    avatar_url: null as string | null,
     bio: "",
     public_profile: false
   })
@@ -32,40 +47,41 @@ export default function SettingsPage() {
     : ""
 
   useEffect(() => {
-    if (profile) {
-      setFormData({
-        bio: (profile as any).bio || "",
-        public_profile: (profile as any).public_profile || false
-      })
+    if (profile && user) {
+      const initialData = {
+        full_name: profile.full_name || user.fullName || "",
+        avatar_url: profile.avatar_url || user.imageUrl || null,
+        bio: profile.bio || "",
+        public_profile: profile.public_profile || false
+      }
+      setFormData(initialData)
     }
-    
-    loadStories()
-  }, [profile])
+  }, [profile, user])
 
-  const loadStories = async () => {
-    try {
-      const storiesData = await dataLayer.getAllStories()
-      setStories(storiesData)
-    } catch (error) {
-      console.error("Error loading stories:", error)
-    }
-  }
+  // Track changes
+  useEffect(() => {
+    if (!profile || !user) return
+    
+    const hasFormChanges = 
+      formData.full_name !== (profile.full_name || user.fullName || "") ||
+      formData.avatar_url !== (profile.avatar_url || user.imageUrl || null) ||
+      formData.bio !== (profile.bio || "") ||
+      formData.public_profile !== (profile.public_profile || false)
+    
+    setHasChanges(hasFormChanges)
+  }, [formData, profile, user])
 
   const handleSaveProfile = async () => {
     setLoading(true)
     try {
       if (!user) throw new Error("No user logged in")
       
-      // Use our API endpoint to update profile (bypasses RLS)
       const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          bio: formData.bio,
-          public_profile: formData.public_profile
-        })
+        body: JSON.stringify(formData)
       })
 
       if (!response.ok) {
@@ -73,8 +89,8 @@ export default function SettingsPage() {
         throw new Error(errorData.error || 'Failed to update profile')
       }
 
-      const result = await response.json()
-      console.log("Profile updated successfully:", result.profile)
+      // Refresh profile data
+      await refreshProfile()
       alert("Profile updated successfully!")
     } catch (error) {
       console.error("Error updating profile:", error)
@@ -84,17 +100,12 @@ export default function SettingsPage() {
     }
   }
 
-  const toggleStoryFeatured = async (storyId: string, featured: boolean) => {
-    try {
-      setStories(prev => 
-        prev.map(story => 
-          story.id === storyId ? { ...story, featured } : story
-        )
-      )
-      console.log(`Story ${storyId} featured: ${featured}`)
-    } catch (error) {
-      alert("Error updating story")
-    }
+  const handleImageUpload = (imageUrl: string) => {
+    setFormData(prev => ({ ...prev, avatar_url: imageUrl }))
+  }
+
+  const handleImageRemove = () => {
+    setFormData(prev => ({ ...prev, avatar_url: null }))
   }
 
   const handleShareProfile = async () => {
@@ -102,7 +113,7 @@ export default function SettingsPage() {
       try {
         await navigator.share({
           title: "My Writer Profile",
-          text: "Check out my featured stories!",
+          text: "Check out my writing!",
           url: profileUrl,
         })
       } catch (err) {
@@ -124,180 +135,283 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold" style={{ color: tokens.colors.text.primary }}>
           Settings
         </h1>
+        {hasChanges && (
+          <Button 
+            onClick={handleSaveProfile} 
+            disabled={loading}
+            style={{ backgroundColor: tokens.colors.primary[600] }}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                Save Changes
+              </>
+            )}
+          </Button>
+        )}
       </div>
 
-      {/* Public Profile Settings */}
-      <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Share2 className="w-5 h-5" />
-            Public Profile
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="public-profile">Enable Public Profile</Label>
-                <p className="text-sm text-gray-500">
-                  Allow others to see your featured stories and characters
+      {/* Change Indicator */}
+      {hasChanges && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-800">
+            You have unsaved changes. Click "Save Changes" to apply them.
+          </p>
+        </div>
+      )}
+
+      {/* Tabbed Interface */}
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="profile" className="flex items-center gap-2">
+            <User className="w-4 h-4" />
+            Profile
+          </TabsTrigger>
+          <TabsTrigger value="account" className="flex items-center gap-2">
+            <Shield className="w-4 h-4" />
+            Account
+          </TabsTrigger>
+          <TabsTrigger value="design-system" className="flex items-center gap-2">
+            <Palette className="w-4 h-4" />
+            Design System
+          </TabsTrigger>
+          <TabsTrigger value="help" className="flex items-center gap-2">
+            <HelpCircle className="w-4 h-4" />
+            Help & Support
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Profile Tab */}
+        <TabsContent value="profile" className="space-y-6">
+          {/* Profile Settings */}
+          <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <User className="w-5 h-5" />
+                Profile Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Profile Picture */}
+              <ProfilePictureUpload
+                currentImageUrl={formData.avatar_url || undefined}
+                onImageUpload={handleImageUpload}
+                onImageRemove={handleImageRemove}
+                loading={loading}
+              />
+
+              {/* Display Name */}
+              <div className="space-y-2">
+                <Label htmlFor="full_name">Display Name</Label>
+                <Input
+                  id="full_name"
+                  value={formData.full_name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
+                  placeholder="Your display name"
+                  disabled={loading}
+                />
+                <p className="text-xs" style={{ color: tokens.colors.text.muted }}>
+                  This is how your name will appear on your public profile
                 </p>
               </div>
-              <Switch
-                id="public-profile"
-                checked={formData.public_profile}
-                onCheckedChange={(checked) => 
-                  setFormData(prev => ({ ...prev, public_profile: checked }))
-                }
-              />
-            </div>
 
-            <div>
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea
-                id="bio"
-                placeholder="Tell people about yourself and your writing..."
-                value={formData.bio}
-                onChange={(e) => 
-                  setFormData(prev => ({ ...prev, bio: e.target.value }))
-                }
-                rows={3}
-              />
-            </div>
+              {/* Bio */}
+              <div className="space-y-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  id="bio"
+                  placeholder="Tell people about yourself and your writing..."
+                  value={formData.bio}
+                  onChange={(e) => 
+                    setFormData(prev => ({ ...prev, bio: e.target.value }))
+                  }
+                  rows={3}
+                  disabled={loading}
+                />
+              </div>
 
-            <Button 
-              onClick={handleSaveProfile} 
-              disabled={loading}
-              style={{ backgroundColor: tokens.colors.primary[600] }}
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {loading ? "Saving..." : "Save Profile"}
-            </Button>
-          </div>
-
-          {formData.public_profile && (
-            <div className="border-t pt-6">
+              {/* Public Profile Toggle */}
               <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-semibold">Your Profile URL</h4>
-                  <p className="text-sm text-gray-500">Share this link to showcase your work</p>
+                <div className="space-y-1">
+                  <Label>Public Profile</Label>
+                  <p className="text-sm" style={{ color: tokens.colors.text.muted }}>
+                    Make your profile visible to others and showcase your work
+                  </p>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={handleShareProfile}>
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share
+                <Switch
+                  checked={formData.public_profile}
+                  onCheckedChange={(checked) => 
+                    setFormData(prev => ({ ...prev, public_profile: checked }))
+                  }
+                  disabled={loading}
+                />
+              </div>
+
+              {/* Public Profile URL */}
+              {formData.public_profile && (
+                <div className="border-t pt-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-semibold">Your Profile URL</h4>
+                      <p className="text-sm" style={{ color: tokens.colors.text.muted }}>
+                        Share this link to showcase your work
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" onClick={handleShareProfile}>
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Share
+                      </Button>
+                      <Button asChild variant="outline">
+                        <Link href={`/profile/${user.id}`} target="_blank">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Preview
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="p-2 bg-gray-100 rounded text-sm font-mono break-all">
+                    {profileUrl}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Account Information */}
+          <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
+            <CardHeader>
+              <CardTitle>Account Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label>Email</Label>
+                <div className="flex items-center gap-2">
+                  <Input 
+                    value={user.emailAddresses?.[0]?.emailAddress || ""} 
+                    disabled 
+                    className="bg-gray-50 flex-1"
+                  />
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    asChild
+                  >
+                    <Link href="/account">
+                      Manage
+                    </Link>
                   </Button>
-                  <Button asChild variant="outline">
-                    <Link href={`/profile/${user.id}`} target="_blank">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Preview
+                </div>
+                <p className="text-xs mt-1" style={{ color: tokens.colors.text.muted }}>
+                  Change email, password, and security settings
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <Label>Subscription</Label>
+                <Badge 
+                  variant={user.publicMetadata?.subscription === "pro" ? "default" : "secondary"}
+                  className="flex items-center gap-1"
+                >
+                  {user.publicMetadata?.subscription === "pro" && (
+                    <Crown className="w-3 h-3" />
+                  )}
+                  {user.publicMetadata?.subscription === "pro" ? "Pro Writer" : "Free Writer"}
+                </Badge>
+              </div>
+
+              <div>
+                <Label>Member Since</Label>
+                <p className="text-sm" style={{ color: tokens.colors.text.muted }}>
+                  {new Date(user.createdAt || "").toLocaleDateString()}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Account Tab - Clerk UserProfile */}
+        <TabsContent value="account">
+          <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                Account & Security
+              </CardTitle>
+              <p className="text-sm" style={{ color: tokens.colors.text.muted }}>
+                Manage your email, password, and security settings
+              </p>
+            </CardHeader>
+            <CardContent>
+              <UserProfile 
+                routing="hash"
+                appearance={{
+                  elements: {
+                    rootBox: "w-full",
+                    cardBox: "border-0 shadow-none bg-transparent",
+                    avatarBox: "hidden",
+                    profileSectionPrimaryButton: "hidden",
+                  }
+                }}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Design System Tab */}
+        <TabsContent value="design-system">
+          <DesignSystemEditor />
+        </TabsContent>
+
+        {/* Help & Support Tab */}
+        <TabsContent value="help">
+          <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5" />
+                Help & Support
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-semibold mb-2">Documentation</h4>
+                  <p className="text-sm mb-4" style={{ color: tokens.colors.text.muted }}>
+                    Complete guides and tutorials
+                  </p>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/help/docs">
+                      Browse Documentation
+                    </Link>
+                  </Button>
+                </div>
+                
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-semibold mb-2">Quick Help</h4>
+                  <p className="text-sm mb-4" style={{ color: tokens.colors.text.muted }}>
+                    Get help and support
+                  </p>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/help">
+                      Visit Help Center
                     </Link>
                   </Button>
                 </div>
               </div>
-              <div className="mt-2 p-2 bg-gray-100 rounded text-sm font-mono break-all">
-                {profileUrl}
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Featured Stories */}
-      <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
-        <CardHeader>
-          <CardTitle>Featured Stories</CardTitle>
-          <p className="text-sm text-gray-500">
-            Choose which stories to showcase on your public profile
-          </p>
-        </CardHeader>
-        <CardContent>
-          {stories.length > 0 ? (
-            <div className="space-y-3">
-              {stories.map((story) => (
-                <div 
-                  key={story.id}
-                  className="flex items-center justify-between p-3 border rounded-lg"
-                  style={{ borderColor: tokens.colors.neutral[200] }}
-                >
-                  <div className="flex-1">
-                    <h4 className="font-medium">{story.title}</h4>
-                    {story.description && (
-                      <p className="text-sm text-gray-500 truncate">
-                        {story.description}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-2 mt-1">
-                      {story.genre && (
-                        <Badge variant="outline" className="text-xs">
-                          {story.genre}
-                        </Badge>
-                      )}
-                      {story.featured && (
-                        <Badge className="text-xs bg-green-100 text-green-800">
-                          Featured
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  <Switch
-                    checked={story.featured || false}
-                    onCheckedChange={(checked) => 
-                      toggleStoryFeatured(story.id, checked)
-                    }
-                    disabled={!formData.public_profile}
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-center py-8 text-gray-500">
-              No stories yet. Create your first story to get started!
-            </p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Account Info */}
-      <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
-        <CardHeader>
-          <CardTitle>Account Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label>Name</Label>
-            <Input 
-              value={user.fullName || user.firstName || ""} 
-              disabled 
-              className="bg-gray-50"
-            />
-          </div>
-          <div>
-            <Label>Email</Label>
-            <Input 
-              value={user.emailAddresses?.[0]?.emailAddress || ""} 
-              disabled 
-              className="bg-gray-50"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Label>Subscription</Label>
-            <Badge 
-              variant={user.publicMetadata?.subscription === "pro" ? "default" : "secondary"}
-              className="flex items-center gap-1"
-            >
-              {user.publicMetadata?.subscription === "pro" && (
-                <Crown className="w-3 h-3" />
-              )}
-              {user.publicMetadata?.subscription === "pro" ? "Pro" : "Free"}
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
