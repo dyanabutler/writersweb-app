@@ -18,6 +18,7 @@ function dbRowToCharacter(row: CharacterRow): Character {
     firstAppearance: row.first_appearance || "",
     description: row.description || "",
     backstory: row.backstory || "",
+    featured: (row as any).featured || false,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
   }
@@ -76,6 +77,7 @@ export async function getCharacterBySlug(slug: string, storyId?: string): Promis
 export async function createCharacter(
   character: Omit<Character, "slug" | "createdAt" | "updatedAt">,
   storyId: string,
+  userId: string,
 ): Promise<Character | null> {
   try {
     const slug = generateSlug(character.name)
@@ -83,6 +85,7 @@ export async function createCharacter(
     const { data, error } = await supabase
       .from("characters")
       .insert({
+        user_id: userId,
         story_id: storyId,
         slug,
         name: character.name,
@@ -95,6 +98,7 @@ export async function createCharacter(
         first_appearance: character.firstAppearance,
         description: character.description,
         backstory: character.backstory,
+        featured: character.featured || false,
       })
       .select()
       .single()
@@ -129,6 +133,7 @@ export async function updateCharacter(
     if (updates.firstAppearance) updateData.first_appearance = updates.firstAppearance
     if (updates.description) updateData.description = updates.description
     if (updates.backstory) updateData.backstory = updates.backstory
+    if (updates.featured !== undefined) updateData.featured = updates.featured
 
     let query = supabase.from("characters").update(updateData).eq("slug", slug)
 
@@ -212,6 +217,27 @@ export async function getCharactersByStatus(status: Character["status"], storyId
     return data?.map(dbRowToCharacter) || []
   } catch (error) {
     console.error("Error in getCharactersByStatus:", error)
+    return []
+  }
+}
+
+export async function getFeaturedCharacters(userId: string): Promise<Character[]> {
+  try {
+    const { data, error } = await supabase
+      .from("characters")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("featured", true)
+      .order("updated_at", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching featured characters:", error)
+      return []
+    }
+
+    return data?.map(dbRowToCharacter) || []
+  } catch (error) {
+    console.error("Error in getFeaturedCharacters:", error)
     return []
   }
 } 

@@ -62,6 +62,7 @@ export function StorySelector({ selectedStoryId, onStorySelect }: StorySelectorP
       genre: "",
       status: "planning",
       currentWordCount: 0,
+      featured: false,
     })
 
     if (newStory) {

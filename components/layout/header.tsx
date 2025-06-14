@@ -12,7 +12,7 @@ import { useAuth } from "@/lib/auth/clerk-auth-context"
 export function Header() {
   const { tokens } = useDesignSystem()
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const { user, isSignedIn, loading } = useAuth()
+  const { user, isSignedIn, loading, signOut } = useAuth()
 
   if (loading) {
     return (
@@ -66,7 +66,18 @@ export function Header() {
             </Button>
 
             {isSignedIn && user ? (
-              <UserMenu user={user} onLogout={() => {}} />
+              <UserMenu 
+                user={{
+                  id: user.id,
+                  name: user.fullName || user.firstName || "User",
+                  email: user.emailAddresses?.[0]?.emailAddress || "",
+                  subscription: (user.publicMetadata?.subscription as "free" | "pro") || "free",
+                  avatar: user.imageUrl || ""
+                }} 
+                onLogout={async () => {
+                  await signOut()
+                }} 
+              />
             ) : (
               <Button onClick={() => setShowAuthModal(true)}>Sign In</Button>
             )}

@@ -31,10 +31,10 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
   // Check if we need to show verification
   const needsVerification = 
     (signUp?.status === "missing_requirements" && signUp?.unverifiedFields?.includes("email_address")) ||
-    (signIn?.status === "needs_first_factor" && signIn?.supportedFirstFactors?.some(f => f.strategy === "email_code"))
+    (signIn?.status === "needs_first_factor")
 
-  // Show verification step if needed
-  if (showVerification || needsVerification) {
+  // Show verification step if needed and not already signed in
+  if ((showVerification || needsVerification) && !isSignedIn) {
     const email = verificationEmail || 
       signUp?.emailAddress || 
       signIn?.identifier || ""
@@ -50,7 +50,17 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
                 <Cloud className="w-5 h-5" style={{ color: tokens.colors.icons.accent }} />
                 Verify Your Email
               </CardTitle>
-              <Button variant="ghost" size="sm" onClick={onClose}>
+              <Button variant="ghost" size="sm" onClick={() => {
+                setShowVerification(false)
+                // Reset Clerk state
+                if (signUp && signUp.status !== "complete") {
+                  signUp.reload?.()
+                }
+                if (signIn && signIn.status !== "complete") {
+                  signIn.reload?.()
+                }
+                onClose()
+              }}>
                 <X className="w-4 h-4" />
               </Button>
             </div>
@@ -59,7 +69,16 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
             <VerificationStep
               mode={mode}
               emailAddress={email}
-              onBack={() => setShowVerification(false)}
+              onBack={() => {
+                setShowVerification(false)
+                // Reset Clerk state
+                if (signUp && signUp.status !== "complete") {
+                  signUp.reload?.()
+                }
+                if (signIn && signIn.status !== "complete") {
+                  signIn.reload?.()
+                }
+              }}
               onSuccess={() => {
                 setShowVerification(false)
                 onClose()
@@ -96,6 +115,7 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
 
             <TabsContent value="signin">
               <SignIn
+                routing="hash"
                 appearance={{
                   elements: {
                     formButtonPrimary: {
@@ -114,6 +134,7 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
 
             <TabsContent value="signup">
               <SignUp
+                routing="hash"
                 appearance={{
                   elements: {
                     formButtonPrimary: {

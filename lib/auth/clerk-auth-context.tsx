@@ -38,19 +38,59 @@ export function ClerkAuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single()
-
-      if (error) {
-        console.error("Error fetching profile:", error)
-        // Profile might not exist yet (webhook hasn't processed)
-        // This is normal for new users
-      } else if (data) {
-        setProfile(data)
+      console.log("Fetching profile for user:", userId)
+      
+      // Use API endpoint instead of direct Supabase query
+      const response = await fetch('/api/profile')
+      
+      if (response.ok) {
+        const result = await response.json()
+        console.log("Profile fetched successfully:", result.profile)
+        setProfile(result.profile)
+      } else if (response.status === 404) {
+        // Profile doesn't exist, create it
+        console.log("Profile doesn't exist, creating one for user:", userId)
+        await createProfile(userId)
+      } else {
+        console.error("Error fetching profile:", response.statusText)
+        await createProfile(userId)
       }
     } catch (error) {
       console.error("Error in fetchProfile:", error)
+      await createProfile(userId)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const createProfile = async (userId: string) => {
+    try {
+      console.log("Creating profile for user:", userId)
+      
+      const profileData = {
+        id: userId,
+        email: user?.emailAddresses?.[0]?.emailAddress || "",
+        full_name: user?.fullName || user?.firstName || null,
+        avatar_url: user?.imageUrl || null,
+        subscription_tier: "free",
+        bio: null,
+        public_profile: false
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .insert(profileData)
+        .select()
+        .single()
+
+      if (error) {
+        console.error("Error creating profile:", error)
+      } else if (data) {
+        console.log("Profile created successfully:", data)
+        setProfile(data)
+      }
+    } catch (error) {
+      console.error("Error in createProfile:", error)
     }
   }
 

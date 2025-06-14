@@ -7,9 +7,10 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { Character } from "@/lib/types"
-import { Save, ArrowLeft, Plus, X } from "lucide-react"
+import { Save, ArrowLeft, Plus, X, Star } from "lucide-react"
 import Link from "next/link"
 import { ImageManager } from "@/components/common/image-manager"
+import { Switch } from "@/components/ui/switch"
 
 interface CharacterEditorProps {
   character: Character
@@ -161,6 +162,18 @@ export function CharacterEditor({ character: initialCharacter }: CharacterEditor
                 onChange={(e) => updateCharacter("firstAppearance", e.target.value)}
                 placeholder="Chapter X"
               />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="featured"
+                checked={character.featured || false}
+                onCheckedChange={(checked) => updateCharacter("featured", checked)}
+              />
+              <Label htmlFor="featured" className="flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                Featured Character
+              </Label>
             </div>
           </CardContent>
         </Card>

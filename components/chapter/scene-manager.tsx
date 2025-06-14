@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, GripVertical, Trash2, Edit } from "lucide-react"
+import { Plus, GripVertical, Trash2, Edit, Star } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import type { Scene } from "@/lib/types"
 
 interface SceneManagerProps {
@@ -114,6 +116,17 @@ export function SceneManager({ chapterSlug }: SceneManagerProps) {
                   placeholder="Scene summary"
                   rows={2}
                 />
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id={`featured-${scene.id}`}
+                    checked={scene.featured || false}
+                    onCheckedChange={(checked) => updateScene(scene.id, { featured: checked })}
+                  />
+                  <Label htmlFor={`featured-${scene.id}`} className="flex items-center gap-2">
+                    <Star className="w-4 h-4" />
+                    Featured Scene
+                  </Label>
+                </div>
               </div>
             ) : (
               <div>

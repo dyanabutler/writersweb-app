@@ -17,6 +17,7 @@ function dbRowToScene(row: SceneRow): Scene {
     characters: row.characters || [],
     location: row.location || "",
     timeline: row.timeline || "",
+    featured: (row as any).featured || false,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
   }
@@ -74,6 +75,7 @@ export async function getSceneBySlug(slug: string, chapterId?: string): Promise<
 export async function createScene(
   scene: Omit<Scene, "id" | "slug" | "createdAt" | "updatedAt">,
   chapterId: string,
+  userId: string,
 ): Promise<Scene | null> {
   try {
     const slug = generateSlug(scene.title)
@@ -81,6 +83,7 @@ export async function createScene(
     const { data, error } = await supabase
       .from("scenes")
       .insert({
+        user_id: userId,
         chapter_id: chapterId,
         slug,
         title: scene.title,
@@ -90,6 +93,7 @@ export async function createScene(
         characters: scene.characters,
         location: scene.location,
         timeline: scene.timeline,
+        featured: scene.featured || false,
       })
       .select()
       .single()
@@ -121,6 +125,7 @@ export async function updateScene(
     if (updates.characters) updateData.characters = updates.characters
     if (updates.location) updateData.location = updates.location
     if (updates.timeline) updateData.timeline = updates.timeline
+    if (updates.featured !== undefined) updateData.featured = updates.featured
 
     let query = supabase.from("scenes").update(updateData).eq("slug", slug)
 
@@ -207,5 +212,26 @@ export async function reorderScenes(chapterId: string, sceneOrders: { slug: stri
   } catch (error) {
     console.error("Error in reorderScenes:", error)
     return false
+  }
+}
+
+export async function getFeaturedScenes(userId: string): Promise<Scene[]> {
+  try {
+    const { data, error } = await supabase
+      .from("scenes")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("featured", true)
+      .order("updated_at", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching featured scenes:", error)
+      return []
+    }
+
+    return data?.map(dbRowToScene) || []
+  } catch (error) {
+    console.error("Error in getFeaturedScenes:", error)
+    return []
   }
 } 

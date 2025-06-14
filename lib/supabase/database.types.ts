@@ -7,6 +7,11 @@ export interface Database {
           email: string
           full_name: string | null
           avatar_url: string | null
+          bio: string | null
+          public_profile: boolean
+          show_email: boolean
+          show_full_name: boolean
+          show_avatar: boolean
           subscription_tier: "free" | "pro"
           subscription_status: "active" | "cancelled" | "past_due"
           created_at: string
@@ -17,6 +22,8 @@ export interface Database {
           email: string
           full_name?: string | null
           avatar_url?: string | null
+          bio?: string | null
+          public_profile?: boolean
           subscription_tier?: "free" | "pro"
           subscription_status?: "active" | "cancelled" | "past_due"
           created_at?: string
@@ -27,6 +34,8 @@ export interface Database {
           email?: string
           full_name?: string | null
           avatar_url?: string | null
+          bio?: string | null
+          public_profile?: boolean
           subscription_tier?: "free" | "pro"
           subscription_status?: "active" | "cancelled" | "past_due"
           created_at?: string

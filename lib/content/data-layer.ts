@@ -264,7 +264,7 @@ class CloudDataLayer implements DataLayerInterface {
   
   async createCharacter(character: Omit<Character, "slug" | "createdAt" | "updatedAt">, storyId?: string): Promise<Character | null> {
     if (!storyId) throw new Error("Story ID is required for cloud storage")
-    return charactersSupabase.createCharacter(character, storyId)
+    return charactersSupabase.createCharacter(character, storyId, this.userId)
   }
   
   async updateCharacter(slug: string, updates: Partial<Character>, storyId?: string): Promise<Character | null> {
@@ -286,7 +286,7 @@ class CloudDataLayer implements DataLayerInterface {
   
   async createLocation(location: Omit<Location, "slug" | "createdAt" | "updatedAt">, storyId?: string): Promise<Location | null> {
     if (!storyId) throw new Error("Story ID is required for cloud storage")
-    return locationsSupabase.createLocation(location, storyId)
+    return locationsSupabase.createLocation(location, storyId, this.userId)
   }
   
   async updateLocation(slug: string, updates: Partial<Location>, storyId?: string): Promise<Location | null> {
@@ -308,7 +308,7 @@ class CloudDataLayer implements DataLayerInterface {
   
   async createScene(scene: Omit<Scene, "id" | "slug" | "createdAt" | "updatedAt">, chapterId?: string): Promise<Scene | null> {
     if (!chapterId) throw new Error("Chapter ID is required for cloud storage")
-    return scenesSupabase.createScene(scene, chapterId)
+    return scenesSupabase.createScene(scene, chapterId, this.userId)
   }
   
   async updateScene(slug: string, updates: Partial<Scene>, chapterId?: string): Promise<Scene | null> {

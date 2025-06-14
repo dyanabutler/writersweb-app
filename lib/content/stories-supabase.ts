@@ -14,6 +14,11 @@ function dbRowToStoryMetadata(row: StoryRow): StoryMetadata & { id: string } {
     status: row.status,
     wordCountGoal: row.word_count_goal || undefined,
     currentWordCount: row.current_word_count,
+    // Handle featured field from database or default (safe access for migration)
+    featured: (row as any).featured || false,
+    description: (row as any).content || undefined,
+    characters: [],
+    chapters: [],
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
   }
@@ -75,6 +80,8 @@ export async function createStory(
         status: story.status,
         word_count_goal: story.wordCountGoal,
         current_word_count: story.currentWordCount,
+        featured: story.featured || false,
+        content: story.description || null,
       })
       .select()
       .single()
@@ -105,6 +112,8 @@ export async function updateStory(
     if (updates.status) updateData.status = updates.status
     if (updates.wordCountGoal !== undefined) updateData.word_count_goal = updates.wordCountGoal
     if (updates.currentWordCount !== undefined) updateData.current_word_count = updates.currentWordCount
+    if (updates.featured !== undefined) updateData.featured = updates.featured
+    if (updates.description !== undefined) updateData.content = updates.description
 
     const { data, error } = await supabase
       .from("stories")
@@ -204,6 +213,27 @@ export async function getStoriesByGenre(genre: string, userId: string): Promise<
     return data?.map(dbRowToStoryMetadata) || []
   } catch (error) {
     console.error("Error in getStoriesByGenre:", error)
+    return []
+  }
+}
+
+export async function getFeaturedStories(userId: string): Promise<(StoryMetadata & { id: string })[]> {
+  try {
+    const { data, error } = await supabase
+      .from("stories")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("featured", true)
+      .order("updated_at", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching featured stories:", error)
+      return []
+    }
+
+    return data?.map(dbRowToStoryMetadata) || []
+  } catch (error) {
+    console.error("Error in getFeaturedStories:", error)
     return []
   }
 }

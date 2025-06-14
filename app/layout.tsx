@@ -12,9 +12,8 @@ import { DataLayerProvider } from "@/lib/content/data-layer-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Story Management System",
-  description: "Manage your story chapters, characters, and scenes",
-  generator: "v0.dev",
+  title: "writers web",
+  description: "manage your story chapters, characters, and scenes",
 }
 
 export default function RootLayout({

@@ -9,6 +9,7 @@ export interface Chapter {
   timeline: string
   summary: string
   content?: string
+  featured?: boolean
   scenes?: Scene[]
   characters?: string[]
   images?: string[]
@@ -28,6 +29,7 @@ export interface Character {
   firstAppearance: string
   description?: string
   backstory?: string
+  featured?: boolean
   images?: string[]
   createdAt?: Date
   updatedAt?: Date
@@ -44,6 +46,7 @@ export interface Scene {
   characters?: string[]
   location?: string
   timeline?: string
+  featured?: boolean
   createdAt?: Date
   updatedAt?: Date
 }
@@ -55,6 +58,10 @@ export interface StoryMetadata {
   status: "planning" | "writing" | "editing" | "complete"
   wordCountGoal?: number
   currentWordCount: number
+  featured?: boolean
+  characters?: Character[]
+  chapters?: Chapter[]
+  description?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -65,6 +72,7 @@ export interface Location {
   type: "city" | "building" | "landmark" | "region" | "other"
   description: string
   significance: string
+  featured?: boolean
   images?: string[]
   connectedChapters?: string[]
   connectedCharacters?: string[]

@@ -12,6 +12,7 @@ function dbRowToLocation(row: LocationRow): Location {
     type: row.type || "other",
     description: row.description || "",
     significance: row.significance || "",
+    featured: (row as any).featured || false,
     parentLocation: row.parent_location || "",
     climate: row.climate || "",
     population: row.population || "",
@@ -72,6 +73,7 @@ export async function getLocationBySlug(slug: string, storyId?: string): Promise
 export async function createLocation(
   location: Omit<Location, "slug" | "createdAt" | "updatedAt">,
   storyId: string,
+  userId: string,
 ): Promise<Location | null> {
   try {
     const slug = generateSlug(location.name)
@@ -79,12 +81,14 @@ export async function createLocation(
     const { data, error } = await supabase
       .from("locations")
       .insert({
+        user_id: userId,
         story_id: storyId,
         slug,
         name: location.name,
         type: location.type,
         description: location.description,
         significance: location.significance,
+        featured: location.featured || false,
         parent_location: location.parentLocation,
         climate: location.climate,
         population: location.population,
@@ -116,6 +120,7 @@ export async function updateLocation(
     if (updates.type) updateData.type = updates.type
     if (updates.description) updateData.description = updates.description
     if (updates.significance) updateData.significance = updates.significance
+    if (updates.featured !== undefined) updateData.featured = updates.featured
     if (updates.parentLocation) updateData.parent_location = updates.parentLocation
     if (updates.climate) updateData.climate = updates.climate
     if (updates.population) updateData.population = updates.population
@@ -188,6 +193,27 @@ export async function getLocationsByParent(parentLocation: string, storyId?: str
     return data?.map(dbRowToLocation) || []
   } catch (error) {
     console.error("Error in getLocationsByParent:", error)
+    return []
+  }
+}
+
+export async function getFeaturedLocations(userId: string): Promise<Location[]> {
+  try {
+    const { data, error } = await supabase
+      .from("locations")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("featured", true)
+      .order("updated_at", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching featured locations:", error)
+      return []
+    }
+
+    return data?.map(dbRowToLocation) || []
+  } catch (error) {
+    console.error("Error in getFeaturedLocations:", error)
     return []
   }
 } 
