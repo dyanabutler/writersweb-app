@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/layout/sidebar"
 import { Header } from "@/components/layout/header"
 import { DesignSystemProvider } from "@/lib/contexts/design-system-context"
 import { ClerkAuthProvider } from "@/lib/auth/clerk-auth-context"
+import { DataLayerProvider } from "@/lib/content/data-layer-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -27,13 +28,15 @@ export default function RootLayout({
         <body className={`${inter.className} h-full`}>
           <ClerkAuthProvider>
             <DesignSystemProvider>
-              <div className="flex h-full bg-background">
-                <Sidebar />
-                <div className="flex-1 flex flex-col overflow-hidden">
-                  <Header />
-                  <main className="flex-1 overflow-auto p-6">{children}</main>
+              <DataLayerProvider>
+                <div className="flex h-full bg-background">
+                  <Sidebar />
+                  <div className="flex-1 flex flex-col overflow-hidden">
+                    <Header />
+                    <main className="flex-1 overflow-auto p-6">{children}</main>
+                  </div>
                 </div>
-              </div>
+              </DataLayerProvider>
             </DesignSystemProvider>
           </ClerkAuthProvider>
         </body>

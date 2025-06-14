@@ -43,7 +43,7 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
 
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <Card className="w-full max-w-md" style={{ backgroundColor: tokens.colors.background.secondary }}>
+        <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto" style={{ backgroundColor: tokens.colors.background.secondary }}>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2" style={{ color: tokens.colors.text.primary }}>
@@ -75,7 +75,7 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md" style={{ backgroundColor: tokens.colors.background.secondary }}>
+      <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto" style={{ backgroundColor: tokens.colors.background.secondary }}>
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2" style={{ color: tokens.colors.text.primary }}>
