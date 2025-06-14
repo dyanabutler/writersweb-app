@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { X, Mail, Lock, User, Cloud } from "lucide-react"
 import { useDesignSystem } from "@/lib/contexts/design-system-context"
-import { useAuth } from "@/lib/auth/auth-context"
+import { useAuth } from "@/lib/auth/clerk-auth-context"
 
 interface AuthModalProps {
   isOpen: boolean

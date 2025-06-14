@@ -32,13 +32,12 @@ function generateSlug(title: string): string {
 
 export async function getAllScenes(chapterId?: string): Promise<Scene[]> {
   try {
-    let query = supabase.from("scenes").select("*").order("order_index", { ascending: true })
+    const base = supabase.from("scenes").select("*")
 
-    if (chapterId) {
-      query = query.eq("chapter_id", chapterId)
-    }
-
-    const { data, error } = await query
+    const { data, error } = await (chapterId
+      ? base.eq("chapter_id", chapterId).order("order_index", { ascending: true })
+      : base.order("order_index", { ascending: true })
+    )
 
     if (error) {
       console.error("Error fetching scenes:", error)
@@ -54,13 +53,11 @@ export async function getAllScenes(chapterId?: string): Promise<Scene[]> {
 
 export async function getSceneBySlug(slug: string, chapterId?: string): Promise<Scene | null> {
   try {
-    let query = supabase.from("scenes").select("*").eq("slug", slug).single()
+    const base = supabase.from("scenes").select("*").eq("slug", slug)
 
-    if (chapterId) {
-      query = query.eq("chapter_id", chapterId)
-    }
-
-    const { data, error } = await query
+    const { data, error } = await (chapterId
+      ? base.eq("chapter_id", chapterId).single()
+      : base.single())
 
     if (error) {
       console.error("Error fetching scene:", error)

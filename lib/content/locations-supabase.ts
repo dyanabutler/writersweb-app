@@ -30,13 +30,12 @@ function generateSlug(name: string): string {
 
 export async function getAllLocations(storyId?: string): Promise<Location[]> {
   try {
-    let query = supabase.from("locations").select("*").order("name", { ascending: true })
+    const base = supabase.from("locations").select("*")
 
-    if (storyId) {
-      query = query.eq("story_id", storyId)
-    }
-
-    const { data, error } = await query
+    const { data, error } = await (storyId
+      ? base.eq("story_id", storyId).order("name", { ascending: true })
+      : base.order("name", { ascending: true })
+    )
 
     if (error) {
       console.error("Error fetching locations:", error)
@@ -52,13 +51,11 @@ export async function getAllLocations(storyId?: string): Promise<Location[]> {
 
 export async function getLocationBySlug(slug: string, storyId?: string): Promise<Location | null> {
   try {
-    let query = supabase.from("locations").select("*").eq("slug", slug).single()
+    const base = supabase.from("locations").select("*").eq("slug", slug)
 
-    if (storyId) {
-      query = query.eq("story_id", storyId)
-    }
-
-    const { data, error } = await query
+    const { data, error } = await (storyId
+      ? base.eq("story_id", storyId).single()
+      : base.single())
 
     if (error) {
       console.error("Error fetching location:", error)
@@ -123,13 +120,11 @@ export async function updateLocation(
     if (updates.climate) updateData.climate = updates.climate
     if (updates.population) updateData.population = updates.population
 
-    let query = supabase.from("locations").update(updateData).eq("slug", slug)
+    const base = supabase.from("locations").update(updateData).eq("slug", slug)
 
-    if (storyId) {
-      query = query.eq("story_id", storyId)
-    }
-
-    const { data, error } = await query.select().single()
+    const { data, error } = await (storyId
+      ? base.eq("story_id", storyId).select().single()
+      : base.select().single())
 
     if (error) {
       console.error("Error updating location:", error)
@@ -145,13 +140,9 @@ export async function updateLocation(
 
 export async function deleteLocation(slug: string, storyId?: string): Promise<boolean> {
   try {
-    let query = supabase.from("locations").delete().eq("slug", slug)
+    const base = supabase.from("locations").delete().eq("slug", slug)
 
-    if (storyId) {
-      query = query.eq("story_id", storyId)
-    }
-
-    const { error } = await query
+    const { error } = await (storyId ? base.eq("story_id", storyId) : base)
 
     if (error) {
       console.error("Error deleting location:", error)
@@ -167,13 +158,9 @@ export async function deleteLocation(slug: string, storyId?: string): Promise<bo
 
 export async function getLocationsByType(type: Location["type"], storyId?: string): Promise<Location[]> {
   try {
-    let query = supabase.from("locations").select("*").eq("type", type)
+    const base = supabase.from("locations").select("*").eq("type", type)
 
-    if (storyId) {
-      query = query.eq("story_id", storyId)
-    }
-
-    const { data, error } = await query
+    const { data, error } = await (storyId ? base.eq("story_id", storyId) : base)
 
     if (error) {
       console.error("Error fetching locations by type:", error)
@@ -189,13 +176,9 @@ export async function getLocationsByType(type: Location["type"], storyId?: strin
 
 export async function getLocationsByParent(parentLocation: string, storyId?: string): Promise<Location[]> {
   try {
-    let query = supabase.from("locations").select("*").eq("parent_location", parentLocation)
+    const base = supabase.from("locations").select("*").eq("parent_location", parentLocation)
 
-    if (storyId) {
-      query = query.eq("story_id", storyId)
-    }
-
-    const { data, error } = await query
+    const { data, error } = await (storyId ? base.eq("story_id", storyId) : base)
 
     if (error) {
       console.error("Error fetching child locations:", error)
