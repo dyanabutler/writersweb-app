@@ -1,94 +1,164 @@
+import { supabase } from "@/lib/supabase/client"
 import type { Character } from "@/lib/types"
+import type { Database } from "@/lib/supabase/database.types"
 
-// Mock data - in a real app, this would come from your file system or database
-const mockCharacters: Character[] = [
-  {
-    slug: "john-hero",
-    name: "John",
-    role: "Protagonist",
-    age: 25,
-    status: "alive",
-    location: "Village Square",
-    affiliations: ["Village Guard", "Heroes Guild"],
-    relationships: ["Mary - Love Interest", "Elder - Mentor"],
-    firstAppearance: "Chapter 1",
-    description: "A brave young man with a mysterious past.",
-    backstory: "Orphaned at a young age, raised by the village elder.",
-    images: ["/placeholder.svg?height=400&width=400&text=John+Portrait"], // Add this line
-  },
-  {
-    slug: "mary-companion",
-    name: "Mary",
-    role: "Supporting Character",
-    age: 23,
-    status: "alive",
-    location: "Village Square",
-    affiliations: ["Village Healers"],
-    relationships: ["John - Love Interest", "Elder - Teacher"],
-    firstAppearance: "Chapter 1",
-    description: "A skilled healer with a kind heart.",
-    backstory: "Daughter of the village healer, trained in ancient arts.",
-    images: ["/placeholder.svg?height=400&width=400&text=Mary+Healer"], // Add this line
-  },
-  {
-    slug: "dark-lord",
-    name: "Dark Lord Malachar",
-    role: "Antagonist",
-    age: 500,
-    status: "alive",
-    location: "Dark Castle",
-    affiliations: ["Shadow Legion", "Dark Sorcerers"],
-    relationships: ["John - Enemy", "Shadow General - Lieutenant"],
-    firstAppearance: "Chapter 5",
-    description: "An ancient evil seeking to conquer the realm.",
-    backstory: "Once a noble wizard, corrupted by dark magic centuries ago.",
-    images: ["/placeholder.svg?height=400&width=400&text=Dark+Lord"], // Add this line
-  },
-]
+type CharacterRow = Database["public"]["Tables"]["characters"]["Row"]
 
-export async function getAllCharacters(): Promise<Character[]> {
-  await new Promise((resolve) => setTimeout(resolve, 100))
-  return mockCharacters.sort((a, b) => a.name.localeCompare(b.name))
+// Helper function to convert database row to Character type
+function dbRowToCharacter(row: CharacterRow): Character {
+  return {
+    slug: row.slug,
+    name: row.name,
+    role: row.role || "",
+    age: row.age || 0,
+    status: row.status,
+    location: row.location || "",
+    affiliations: row.affiliations || [],
+    relationships: row.relationships || [],
+    firstAppearance: row.first_appearance || "",
+    description: row.description || "",
+    backstory: row.backstory || "",
+    images: [], // Images will be handled separately
+    createdAt: new Date(row.created_at),
+    updatedAt: new Date(row.updated_at),
+  }
 }
 
-export async function getCharacterBySlug(slug: string): Promise<Character | null> {
-  await new Promise((resolve) => setTimeout(resolve, 100))
-  return mockCharacters.find((character) => character.slug === slug) || null
-}
-
-export async function createCharacter(character: Omit<Character, "slug">): Promise<Character> {
-  const slug = character.name
+// Helper function to generate slug from name
+function generateSlug(name: string): string {
+  return name
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "")
-  const newCharacter: Character = {
-    ...character,
-    slug,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }
-
-  mockCharacters.push(newCharacter)
-  return newCharacter
 }
 
-export async function updateCharacter(slug: string, updates: Partial<Character>): Promise<Character | null> {
-  const index = mockCharacters.findIndex((character) => character.slug === slug)
-  if (index === -1) return null
+export async function getAllCharacters(): Promise<Character[]> {
+  try {
+    const { data, error } = await supabase
+      .from("characters")
+      .select("*")
+      .order("name", { ascending: true })
 
-  mockCharacters[index] = {
-    ...mockCharacters[index],
-    ...updates,
-    updatedAt: new Date(),
+    if (error) {
+      console.error("Error fetching characters:", error)
+      return []
+    }
+
+    return data?.map(dbRowToCharacter) || []
+  } catch (error) {
+    console.error("Error in getAllCharacters:", error)
+    return []
   }
+}
 
-  return mockCharacters[index]
+export async function getCharacterBySlug(slug: string): Promise<Character | null> {
+  try {
+    const { data, error } = await supabase
+      .from("characters")
+      .select("*")
+      .eq("slug", slug)
+      .single()
+
+    if (error) {
+      console.error("Error fetching character:", error)
+      return null
+    }
+
+    return data ? dbRowToCharacter(data) : null
+  } catch (error) {
+    console.error("Error in getCharacterBySlug:", error)
+    return null
+  }
+}
+
+export async function createCharacter(
+  character: Omit<Character, "slug" | "createdAt" | "updatedAt">
+): Promise<Character | null> {
+  try {
+    const slug = generateSlug(character.name)
+
+    const { data, error } = await supabase
+      .from("characters")
+      .insert({
+        slug,
+        name: character.name,
+        role: character.role,
+        age: character.age,
+        status: character.status,
+        location: character.location,
+        affiliations: character.affiliations,
+        relationships: character.relationships,
+        first_appearance: character.firstAppearance,
+        description: character.description,
+        backstory: character.backstory,
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error("Error creating character:", error)
+      return null
+    }
+
+    return data ? dbRowToCharacter(data) : null
+  } catch (error) {
+    console.error("Error in createCharacter:", error)
+    return null
+  }
+}
+
+export async function updateCharacter(
+  slug: string,
+  updates: Partial<Character>
+): Promise<Character | null> {
+  try {
+    const updateData: any = {}
+
+    if (updates.name) updateData.name = updates.name
+    if (updates.role) updateData.role = updates.role
+    if (updates.age !== undefined) updateData.age = updates.age
+    if (updates.status) updateData.status = updates.status
+    if (updates.location) updateData.location = updates.location
+    if (updates.affiliations) updateData.affiliations = updates.affiliations
+    if (updates.relationships) updateData.relationships = updates.relationships
+    if (updates.firstAppearance) updateData.first_appearance = updates.firstAppearance
+    if (updates.description) updateData.description = updates.description
+    if (updates.backstory) updateData.backstory = updates.backstory
+
+    const { data, error } = await supabase
+      .from("characters")
+      .update(updateData)
+      .eq("slug", slug)
+      .select()
+      .single()
+
+    if (error) {
+      console.error("Error updating character:", error)
+      return null
+    }
+
+    return data ? dbRowToCharacter(data) : null
+  } catch (error) {
+    console.error("Error in updateCharacter:", error)
+    return null
+  }
 }
 
 export async function deleteCharacter(slug: string): Promise<boolean> {
-  const index = mockCharacters.findIndex((character) => character.slug === slug)
-  if (index === -1) return false
+  try {
+    const { error } = await supabase
+      .from("characters")
+      .delete()
+      .eq("slug", slug)
 
-  mockCharacters.splice(index, 1)
-  return true
+    if (error) {
+      console.error("Error deleting character:", error)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error("Error in deleteCharacter:", error)
+    return false
+  }
 }

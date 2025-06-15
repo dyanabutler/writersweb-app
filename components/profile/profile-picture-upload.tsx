@@ -23,131 +23,149 @@ export function ProfilePictureUpload({
   loading = false
 }: ProfilePictureUploadProps) {
   const { tokens } = useDesignSystem()
-  const [dragOver, setDragOver] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [dragActive, setDragActive] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileSelect = async (file: File) => {
+  const handleFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return
+
+    const file = files[0]
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file')
       return
     }
 
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
-      alert('Image size must be less than 5MB')
+      alert('Image must be smaller than 5MB')
       return
     }
 
     setUploading(true)
     try {
-      // TODO: Replace with your preferred upload service
-      // For now, create a mock URL - you'll need to implement actual upload
-      const mockUrl = await uploadToService(file)
-      onImageUpload(mockUrl)
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload/profile-picture', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Upload failed')
+      }
+
+      const { url } = await response.json()
+      onImageUpload(url)
     } catch (error) {
-      console.error('Upload failed:', error)
-      alert('Upload failed. Please try again.')
+      console.error('Upload error:', error)
+      alert('Failed to upload image. Please try again.')
     } finally {
       setUploading(false)
     }
   }
 
-  // Mock upload function - replace with actual service
-  const uploadToService = async (file: File): Promise<string> => {
-    // Simulate upload delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // In production, you'd upload to Cloudinary, Vercel Blob, etc.
-    // For now, return a placeholder
-    return `/placeholder.svg?height=400&width=400&text=${encodeURIComponent(file.name)}`
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true)
+    } else if (e.type === "dragleave") {
+      setDragActive(false)
+    }
   }
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
-    setDragOver(false)
-    const file = e.dataTransfer.files[0]
-    if (file) handleFileSelect(file)
-  }
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    setDragOver(true)
-  }
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault()
-    setDragOver(false)
-  }
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) handleFileSelect(file)
+    e.stopPropagation()
+    setDragActive(false)
+    handleFiles(e.dataTransfer.files)
   }
 
   return (
     <div className="space-y-4">
       <Label>Profile Picture</Label>
       
-      <div className="flex items-center gap-4">
-        {/* Current Image */}
-        <div className="relative">
-          <Image
-            src={currentImageUrl || "/placeholder.svg"}
-            alt="Profile picture"
-            width={120}
-            height={120}
-            className="rounded-full border-4 border-white shadow-lg object-cover"
-          />
-          {currentImageUrl && (
+      {currentImageUrl ? (
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <Image
+              src={currentImageUrl}
+              alt="Profile"
+              width={80}
+              height={80}
+              className="rounded-full object-cover"
+            />
+          </div>
+          <div className="flex gap-2">
             <Button
-              variant="destructive"
+              variant="outline"
               size="sm"
-              className="absolute -top-2 -right-2 rounded-full p-1 h-6 w-6"
-              onClick={onImageRemove}
-              disabled={loading}
+              onClick={() => inputRef.current?.click()}
+              disabled={uploading || loading}
             >
-              <X className="h-3 w-3" />
+              {uploading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Camera className="w-4 h-4 mr-2" />
+              )}
+              Change
             </Button>
-          )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onImageRemove}
+              disabled={uploading || loading}
+            >
+              <X className="w-4 h-4 mr-2" />
+              Remove
+            </Button>
+          </div>
         </div>
-
-        {/* Upload Area */}
-        <Card 
-          className={`flex-1 cursor-pointer border-2 border-dashed transition-colors ${
-            dragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+      ) : (
+        <Card
+          className={`border-2 border-dashed transition-colors cursor-pointer ${
+            dragActive 
+              ? 'border-blue-400 bg-blue-50' 
+              : 'border-gray-300 hover:border-gray-400'
           }`}
+          style={{ backgroundColor: tokens.colors.background.tertiary }}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
           onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => inputRef.current?.click()}
         >
-          <CardContent className="p-6 text-center">
+          <CardContent className="p-8 text-center">
             {uploading ? (
-              <div className="flex items-center justify-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Uploading...</span>
+              <div className="space-y-2">
+                <Loader2 className="w-8 h-8 mx-auto animate-spin" style={{ color: tokens.colors.primary[600] }} />
+                <p className="text-sm" style={{ color: tokens.colors.text.muted }}>
+                  Uploading...
+                </p>
               </div>
             ) : (
-              <>
-                <Upload className="h-8 w-8 mx-auto mb-2" style={{ color: tokens.colors.icons.muted }} />
-                <p className="text-sm" style={{ color: tokens.colors.text.muted }}>
-                  <span className="font-medium">Click to upload</span> or drag and drop
+              <div className="space-y-2">
+                <Upload className="w-8 h-8 mx-auto" style={{ color: tokens.colors.icons.muted }} />
+                <p className="text-sm" style={{ color: tokens.colors.text.secondary }}>
+                  Drop an image here or click to browse
                 </p>
                 <p className="text-xs" style={{ color: tokens.colors.text.muted }}>
-                  PNG, JPG, GIF up to 5MB
+                  PNG, JPG up to 5MB
                 </p>
-              </>
+              </div>
             )}
           </CardContent>
         </Card>
-      </div>
+      )}
 
-      <Input
-        ref={fileInputRef}
+      <input
+        ref={inputRef}
         type="file"
         accept="image/*"
-        onChange={handleFileInputChange}
+        onChange={(e) => handleFiles(e.target.files)}
         className="hidden"
+        disabled={uploading || loading}
       />
     </div>
   )

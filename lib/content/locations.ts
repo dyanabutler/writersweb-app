@@ -1,90 +1,154 @@
+import { supabase } from "@/lib/supabase/client"
 import type { Location } from "@/lib/types"
+import type { Database } from "@/lib/supabase/database.types"
 
-// Mock data - in a real app, this would come from your file system or database
-const mockLocations: Location[] = [
-  {
-    slug: "village-square",
-    name: "Village Square",
-    type: "landmark",
-    description:
-      "The heart of the small village where our story begins. A cobblestone square surrounded by shops and the old well.",
-    significance: "This is where John first meets the mysterious stranger who changes his life.",
-    images: ["/placeholder.svg?height=400&width=600&text=Village+Square"],
-    connectedChapters: ["the-beginning", "the-call"],
-    connectedCharacters: ["john-hero", "mary-companion"],
-    climate: "Temperate, mild seasons",
-    population: "Village center, ~50 people daily",
-  },
-  {
-    slug: "ancient-forest",
-    name: "Ancient Forest",
-    type: "region",
-    description:
-      "A mysterious forest that has stood for thousands of years. The trees are massive and the canopy blocks most sunlight.",
-    significance: "Contains ancient secrets and magical artifacts crucial to the story.",
-    images: ["/placeholder.svg?height=400&width=600&text=Ancient+Forest"],
-    connectedChapters: ["the-discovery"],
-    connectedCharacters: ["john-hero"],
-    climate: "Cool and damp, perpetual twilight",
-    population: "Uninhabited by humans",
-  },
-  {
-    slug: "dark-castle",
-    name: "Dark Castle",
-    type: "building",
-    description: "A foreboding fortress built on a mountain peak, shrouded in perpetual storm clouds.",
-    significance: "The stronghold of the Dark Lord and the final destination of our hero's journey.",
-    images: ["/placeholder.svg?height=400&width=600&text=Dark+Castle"],
-    connectedChapters: [],
-    connectedCharacters: ["dark-lord"],
-    climate: "Stormy, cold, perpetual darkness",
-    population: "Dark Lord and his minions",
-  },
-]
+type LocationRow = Database["public"]["Tables"]["locations"]["Row"]
 
-export async function getAllLocations(): Promise<Location[]> {
-  await new Promise((resolve) => setTimeout(resolve, 100))
-  return mockLocations.sort((a, b) => a.name.localeCompare(b.name))
+// Helper function to convert database row to Location type
+function dbRowToLocation(row: LocationRow): Location {
+  return {
+    slug: row.slug,
+    name: row.name,
+    type: row.type || "other",
+    description: row.description || "",
+    significance: row.significance || "",
+    images: [], // Images will be handled separately
+    connectedChapters: [], // Will be derived from relationships
+    connectedCharacters: [], // Will be derived from relationships
+    climate: row.climate || "",
+    population: row.population || "",
+    createdAt: new Date(row.created_at),
+    updatedAt: new Date(row.updated_at),
+  }
 }
 
-export async function getLocationBySlug(slug: string): Promise<Location | null> {
-  await new Promise((resolve) => setTimeout(resolve, 100))
-  return mockLocations.find((location) => location.slug === slug) || null
-}
-
-export async function createLocation(location: Omit<Location, "slug">): Promise<Location> {
-  const slug = location.name
+// Helper function to generate slug from name
+function generateSlug(name: string): string {
+  return name
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "")
-  const newLocation: Location = {
-    ...location,
-    slug,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }
-
-  mockLocations.push(newLocation)
-  return newLocation
 }
 
-export async function updateLocation(slug: string, updates: Partial<Location>): Promise<Location | null> {
-  const index = mockLocations.findIndex((location) => location.slug === slug)
-  if (index === -1) return null
+export async function getAllLocations(): Promise<Location[]> {
+  try {
+    const { data, error } = await supabase
+      .from("locations")
+      .select("*")
+      .order("name", { ascending: true })
 
-  mockLocations[index] = {
-    ...mockLocations[index],
-    ...updates,
-    updatedAt: new Date(),
+    if (error) {
+      console.error("Error fetching locations:", error)
+      return []
+    }
+
+    return data?.map(dbRowToLocation) || []
+  } catch (error) {
+    console.error("Error in getAllLocations:", error)
+    return []
   }
+}
 
-  return mockLocations[index]
+export async function getLocationBySlug(slug: string): Promise<Location | null> {
+  try {
+    const { data, error } = await supabase
+      .from("locations")
+      .select("*")
+      .eq("slug", slug)
+      .single()
+
+    if (error) {
+      console.error("Error fetching location:", error)
+      return null
+    }
+
+    return data ? dbRowToLocation(data) : null
+  } catch (error) {
+    console.error("Error in getLocationBySlug:", error)
+    return null
+  }
+}
+
+export async function createLocation(
+  location: Omit<Location, "slug" | "createdAt" | "updatedAt">
+): Promise<Location | null> {
+  try {
+    const slug = generateSlug(location.name)
+
+    const { data, error } = await supabase
+      .from("locations")
+      .insert({
+        slug,
+        name: location.name,
+        type: location.type,
+        description: location.description,
+        significance: location.significance,
+        climate: location.climate,
+        population: location.population,
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error("Error creating location:", error)
+      return null
+    }
+
+    return data ? dbRowToLocation(data) : null
+  } catch (error) {
+    console.error("Error in createLocation:", error)
+    return null
+  }
+}
+
+export async function updateLocation(
+  slug: string,
+  updates: Partial<Location>
+): Promise<Location | null> {
+  try {
+    const updateData: any = {}
+
+    if (updates.name) updateData.name = updates.name
+    if (updates.type) updateData.type = updates.type
+    if (updates.description) updateData.description = updates.description
+    if (updates.significance) updateData.significance = updates.significance
+    if (updates.climate) updateData.climate = updates.climate
+    if (updates.population) updateData.population = updates.population
+
+    const { data, error } = await supabase
+      .from("locations")
+      .update(updateData)
+      .eq("slug", slug)
+      .select()
+      .single()
+
+    if (error) {
+      console.error("Error updating location:", error)
+      return null
+    }
+
+    return data ? dbRowToLocation(data) : null
+  } catch (error) {
+    console.error("Error in updateLocation:", error)
+    return null
+  }
 }
 
 export async function deleteLocation(slug: string): Promise<boolean> {
-  const index = mockLocations.findIndex((location) => location.slug === slug)
-  if (index === -1) return false
+  try {
+    const { error } = await supabase
+      .from("locations")
+      .delete()
+      .eq("slug", slug)
 
-  mockLocations.splice(index, 1)
-  return true
+    if (error) {
+      console.error("Error deleting location:", error)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error("Error in deleteLocation:", error)
+    return false
+  }
 }

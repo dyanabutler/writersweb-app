@@ -12,6 +12,8 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData()
     const file = formData.get('file') as File
+    const type = formData.get('type') as string || 'general'
+    const storyId = formData.get('storyId') as string
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
@@ -22,15 +24,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File must be an image' }, { status: 400 })
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (10MB limit for story images)
+    if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json({ error: 'File too large' }, { status: 400 })
     }
 
     // Generate unique filename
     const timestamp = Date.now()
     const fileExtension = file.name.split('.').pop()
-    const filename = `profile/${userId}/${timestamp}.${fileExtension}`
+    const filename = `stories/${storyId}/${type}/${timestamp}.${fileExtension}`
 
     // Upload to Vercel Blob
     const blob = await put(filename, file, {

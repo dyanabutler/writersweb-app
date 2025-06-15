@@ -20,7 +20,12 @@ import Link from "next/link"
 export function Header() {
   const { tokens } = useDesignSystem()
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const { user, isSignedIn, loading, signOut } = useAuth()
+  const { user, profile, isSignedIn, loading, signOut } = useAuth()
+
+  // Get display name and avatar from profile or fallback to Clerk data
+  const displayName = profile?.full_name || user?.fullName || user?.firstName || "User"
+  const firstName = profile?.full_name?.split(' ')[0] || user?.firstName || "User"
+  const avatarUrl = profile?.avatar_url || user?.imageUrl || "/placeholder.svg"
 
   if (loading) {
     return (
@@ -78,20 +83,20 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2 p-2">
                     <Image
-                      src={user.imageUrl || "/placeholder.svg"}
-                      alt={user.fullName || "User"}
+                      src={avatarUrl}
+                      alt={displayName}
                       width={32}
                       height={32}
-                      className="rounded-full"
+                      className="rounded-full object-cover"
                     />
                     <span className="hidden md:block text-sm font-medium">
-                      {user.firstName || "User"}
+                      {firstName}
                     </span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">{user.fullName || user.firstName}</p>
+                    <p className="text-sm font-medium">{displayName}</p>
                     <p className="text-xs text-gray-500">{user.emailAddresses?.[0]?.emailAddress}</p>
                   </div>
                   <DropdownMenuSeparator />

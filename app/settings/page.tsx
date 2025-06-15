@@ -205,8 +205,8 @@ export default function SettingsPage() {
               {/* Profile Picture */}
               <ProfilePictureUpload
                 currentImageUrl={formData.avatar_url || undefined}
-                onImageUpload={handleImageUpload}
-                onImageRemove={handleImageRemove}
+                onImageUpload={(url) => setFormData(prev => ({ ...prev, avatar_url: url }))}
+                onImageRemove={() => setFormData(prev => ({ ...prev, avatar_url: null }))}
                 loading={loading}
               />
 
