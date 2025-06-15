@@ -10,8 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { StoryImage } from "@/lib/types"
 import { getAllImages } from "@/lib/content/images"
 import { Search, Users, MapPin, BookOpen, Camera, ChevronLeft, ChevronRight } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
-import { getImageTypeColor } from "@/lib/design-system"
+import { useDesignSystem } from "@/components/design-system"
+import { getImageTypeColor } from "@/components/design-system"
 
 export function ImageGallery() {
   const [images, setImages] = useState<StoryImage[]>([])

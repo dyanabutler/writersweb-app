@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookOpen, Users, Clock, FileText, MapPin } from "lucide-react"
 import { useDataLayerContext } from "@/lib/content/data-layer"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 
 interface StoryStats {
   chapterCount: number

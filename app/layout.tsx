@@ -5,8 +5,8 @@ import { ClerkProvider } from "@clerk/nextjs"
 import "./globals.css"
 import { Sidebar } from "@/components/layout/sidebar"
 import { Header } from "@/components/layout/header"
-import { DesignSystemProvider } from "@/lib/contexts/design-system-context"
-import { ClerkAuthProvider } from "@/lib/auth/clerk-auth-context"
+import { DesignSystemProvider } from "@/components/design-system"
+import { AuthProvider } from "@/lib/auth/clerk-auth-context"
 import { DataLayerProvider } from "@/lib/content/data-layer-provider"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -25,10 +25,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className="h-full">
         <body className={`${inter.className} h-full`}>
-          <ClerkAuthProvider>
+          <AuthProvider>
             <DesignSystemProvider>
               <DataLayerProvider>
-                <div className="flex h-full bg-background">
+                <div className="flex h-full" style={{ backgroundColor: "var(--bg-primary)" }}>
                   <Sidebar />
                   <div className="flex-1 flex flex-col overflow-hidden">
                     <Header />
@@ -37,7 +37,7 @@ export default function RootLayout({
                 </div>
               </DataLayerProvider>
             </DesignSystemProvider>
-          </ClerkAuthProvider>
+          </AuthProvider>
         </body>
       </html>
     </ClerkProvider>

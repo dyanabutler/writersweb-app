@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Camera, Upload, X, Loader2 } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 
 interface ProfilePictureUploadProps {
   currentImageUrl?: string
@@ -57,6 +57,7 @@ export function ProfilePictureUpload({
 
       const { url } = await response.json()
       onImageUpload(url)
+      alert('✅ Profile picture uploaded! Click "Save Changes" to make it permanent.')
     } catch (error) {
       console.error('Upload error:', error)
       alert('Failed to upload image. Please try again.')

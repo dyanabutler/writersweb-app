@@ -3,8 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
-import { getStatusColor, getCharacterStatusColor, getLocationTypeColor } from "@/lib/design-system"
+import { useDesignSystem } from "@/components/design-system"
+import { getStatusColor, getCharacterStatusColor, getLocationTypeColor } from "@/components/design-system"
 import { BookOpen, Users, MapPin, ImageIcon, Palette, Settings } from "lucide-react"
 
 export function DesignPreview() {
@@ -27,13 +27,13 @@ export function DesignPreview() {
           </h4>
           <div className="space-y-2">
             <div className="p-3 rounded-lg" style={{ backgroundColor: tokens.colors.background.primary }}>
-              <span style={{ color: tokens.colors.text.primary }}>Primary Background</span>
+              <span style={{ color: tokens.colors.text.primary }}>Base Background (Document & pages)</span>
             </div>
             <div className="p-3 rounded-lg" style={{ backgroundColor: tokens.colors.background.secondary }}>
-              <span style={{ color: tokens.colors.text.secondary }}>Secondary Background</span>
+              <span style={{ color: tokens.colors.text.secondary }}>Surface Background (This card & panels)</span>
             </div>
             <div className="p-3 rounded-lg" style={{ backgroundColor: tokens.colors.background.tertiary }}>
-              <span style={{ color: tokens.colors.text.muted }}>Tertiary Background</span>
+              <span style={{ color: tokens.colors.text.muted }}>Subtle Background (Inner sections)</span>
             </div>
           </div>
         </div>

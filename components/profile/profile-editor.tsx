@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { ProfilePictureUpload } from "./profile-picture-upload"
 import { useAuth } from "@/lib/auth/clerk-auth-context"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 import { Save, X, Loader2, Settings } from "lucide-react"
 import Link from "next/link"
 

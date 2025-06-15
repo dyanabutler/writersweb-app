@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Check, Cloud, Smartphone, Laptop, Tablet, Crown, Zap } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 
 export function PricingPlans() {
   const { tokens } = useDesignSystem()

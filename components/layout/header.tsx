@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Search, Bell, Settings, HelpCircle, Palette, User, LogOut } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 import { ClerkAuthWrapper } from "@/components/auth/clerk-auth-wrapper"
 import { SyncStatus } from "@/components/sync/sync-status"
 import { useAuth } from "@/lib/auth/clerk-auth-context"
@@ -30,15 +30,18 @@ export function Header() {
   if (loading) {
     return (
       <header
-        className="shadow-sm border-b border-gray-200 px-6 py-4"
-        style={{ backgroundColor: tokens.colors.background.secondary }}
+        className="shadow-sm border-b px-6 py-4"
+        style={{ 
+          backgroundColor: tokens.colors.background.secondary,
+          borderColor: tokens.colors.neutral[200]
+        }}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="h-10 w-64 bg-gray-200 rounded animate-pulse" />
+            <div className="h-10 w-64 rounded animate-pulse" style={{ backgroundColor: tokens.colors.neutral[300] }} />
           </div>
           <div className="flex items-center space-x-4">
-            <div className="h-8 w-20 bg-gray-200 rounded animate-pulse" />
+            <div className="h-8 w-20 rounded animate-pulse" style={{ backgroundColor: tokens.colors.neutral[300] }} />
           </div>
         </div>
       </header>
@@ -48,8 +51,11 @@ export function Header() {
   return (
     <>
       <header
-        className="shadow-sm border-b border-gray-200 px-6 py-4"
-        style={{ backgroundColor: tokens.colors.background.secondary }}
+        className="shadow-sm border-b px-6 py-4"
+        style={{ 
+          backgroundColor: tokens.colors.background.secondary,
+          borderColor: tokens.colors.neutral[200]
+        }}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -61,11 +67,12 @@ export function Header() {
               <input
                 type="text"
                 placeholder="Search stories, characters..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-80"
+                className="pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent w-80"
                 style={{
                   backgroundColor: tokens.colors.background.primary,
                   color: tokens.colors.text.primary,
                   borderColor: tokens.colors.neutral[300],
+                  ...({"--tw-ring-color": tokens.colors.primary[500]} as any),
                 }}
               />
             </div>
@@ -89,15 +96,15 @@ export function Header() {
                       height={32}
                       className="rounded-full object-cover"
                     />
-                    <span className="hidden md:block text-sm font-medium">
+                    <span className="hidden md:block text-sm font-medium" style={{ color: tokens.colors.text.primary }}>
                       {firstName}
                     </span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">{displayName}</p>
-                    <p className="text-xs text-gray-500">{user.emailAddresses?.[0]?.emailAddress}</p>
+                    <p className="text-sm font-medium" style={{ color: tokens.colors.text.primary }}>{displayName}</p>
+                    <p className="text-xs" style={{ color: tokens.colors.text.muted }}>{user.emailAddresses?.[0]?.emailAddress}</p>
                   </div>
                   <DropdownMenuSeparator />
                   

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 import { MarkdownRenderer } from "@/components/docs/markdown-renderer"
 import { ArrowLeft, Clock, User, ExternalLink } from "lucide-react"
 import Link from "next/link"

@@ -1,6 +1,6 @@
 "use client"
 
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 
 interface MarkdownRendererProps {
   content: string

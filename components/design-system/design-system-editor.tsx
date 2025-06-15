@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 import { ColorPicker } from "./color-picker"
 import { DesignPreview } from "./design-preview"
 import { Palette, RotateCcw, Download, Upload, Paintbrush } from "lucide-react"
@@ -117,19 +117,25 @@ export function DesignSystemEditor() {
                 <CardContent className="space-y-6">
                   <div>
                     <Label className="text-base font-medium">Background Colors</Label>
+                    <div className="text-sm mb-3 p-3 rounded-lg" style={{ backgroundColor: tokens.colors.background.tertiary, color: tokens.colors.text.secondary }}>
+                      <p className="font-medium mb-1">Background Hierarchy:</p>
+                      <p>• <strong>Base</strong>: Document body, main page backgrounds</p>
+                      <p>• <strong>Surface</strong>: Cards, panels, sidebar (most common)</p>
+                      <p>• <strong>Subtle</strong>: Inner sections, hover states, secondary areas</p>
+                    </div>
                     <div className="grid grid-cols-1 gap-4 mt-3">
                       <ColorPicker
-                        label="Primary Background (Main app background)"
+                        label="Base Background (Document & page backgrounds)"
                         color={tokens.colors.background.primary}
                         onChange={(newColor) => updateColor("colors.background.primary", newColor)}
                       />
                       <ColorPicker
-                        label="Secondary Background (Cards, panels)"
+                        label="Surface Background (Cards, panels, sidebar)"
                         color={tokens.colors.background.secondary}
                         onChange={(newColor) => updateColor("colors.background.secondary", newColor)}
                       />
                       <ColorPicker
-                        label="Tertiary Background (Subtle areas)"
+                        label="Subtle Background (Inner sections, hover states)"
                         color={tokens.colors.background.tertiary}
                         onChange={(newColor) => updateColor("colors.background.tertiary", newColor)}
                       />

@@ -8,8 +8,10 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Save, User, FileText } from "lucide-react"
+import { useDesignSystem } from "@/components/design-system"
 
 export function SettingsPanel() {
+  const { tokens } = useDesignSystem()
   const [autoSave, setAutoSave] = useState(true)
   const [wordCountGoal, setWordCountGoal] = useState("50000")
   const [authorName, setAuthorName] = useState("")
@@ -40,67 +42,86 @@ export function SettingsPanel() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2" style={{ color: tokens.colors.text.primary }}>
+              <FileText className="w-5 h-5" style={{ color: tokens.colors.icons.primary }} />
               Writing Preferences
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Auto-save</Label>
-                <div className="text-sm text-gray-500">Automatically save changes as you type</div>
+                <Label style={{ color: tokens.colors.text.primary }}>Auto-save</Label>
+                <div className="text-sm" style={{ color: tokens.colors.text.muted }}>Automatically save changes as you type</div>
               </div>
               <Switch checked={autoSave} onCheckedChange={setAutoSave} />
             </div>
 
             <div>
-              <Label htmlFor="wordCountGoal">Daily Word Count Goal</Label>
+              <Label htmlFor="wordCountGoal" style={{ color: tokens.colors.text.primary }}>Daily Word Count Goal</Label>
               <Input
                 id="wordCountGoal"
                 type="number"
                 value={wordCountGoal}
                 onChange={(e) => setWordCountGoal(e.target.value)}
                 placeholder="1000"
+                style={{
+                  backgroundColor: tokens.colors.background.primary,
+                  color: tokens.colors.text.primary,
+                  borderColor: tokens.colors.neutral[300],
+                }}
               />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2" style={{ color: tokens.colors.text.primary }}>
+              <User className="w-5 h-5" style={{ color: tokens.colors.icons.primary }} />
               Story Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="storyTitle">Story Title</Label>
+              <Label htmlFor="storyTitle" style={{ color: tokens.colors.text.primary }}>Story Title</Label>
               <Input
                 id="storyTitle"
                 value={storyTitle}
                 onChange={(e) => setStoryTitle(e.target.value)}
                 placeholder="Enter your story title"
+                style={{
+                  backgroundColor: tokens.colors.background.primary,
+                  color: tokens.colors.text.primary,
+                  borderColor: tokens.colors.neutral[300],
+                }}
               />
             </div>
 
             <div>
-              <Label htmlFor="authorName">Author Name</Label>
+              <Label htmlFor="authorName" style={{ color: tokens.colors.text.primary }}>Author Name</Label>
               <Input
                 id="authorName"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
                 placeholder="Your name"
+                style={{
+                  backgroundColor: tokens.colors.background.primary,
+                  color: tokens.colors.text.primary,
+                  borderColor: tokens.colors.neutral[300],
+                }}
               />
             </div>
 
             <div>
-              <Label htmlFor="genre">Genre</Label>
+              <Label htmlFor="genre" style={{ color: tokens.colors.text.primary }}>Genre</Label>
               <Select value={genre} onValueChange={setGenre}>
-                <SelectTrigger>
+                <SelectTrigger style={{
+                  backgroundColor: tokens.colors.background.primary,
+                  color: tokens.colors.text.primary,
+                  borderColor: tokens.colors.neutral[300],
+                }}>
                   <SelectValue placeholder="Select genre" />
                 </SelectTrigger>
                 <SelectContent>
@@ -119,9 +140,9 @@ export function SettingsPanel() {
         </Card>
       </div>
 
-      <Card>
+      <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
         <CardHeader>
-          <CardTitle>Export & Backup</CardTitle>
+          <CardTitle style={{ color: tokens.colors.text.primary }}>Export & Backup</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -130,7 +151,7 @@ export function SettingsPanel() {
             <Button variant="outline">Backup Data</Button>
           </div>
 
-          <div className="text-sm text-gray-500">
+          <div className="text-sm" style={{ color: tokens.colors.text.muted }}>
             Export your story in various formats or create a backup of all your data.
           </div>
         </CardContent>

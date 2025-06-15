@@ -25,7 +25,7 @@ import {
   HelpCircle,
   Shield
 } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 import Link from "next/link"
 
 export default function SettingsPage() {
@@ -100,12 +100,67 @@ export default function SettingsPage() {
     }
   }
 
-  const handleImageUpload = (imageUrl: string) => {
+  const handleImageUpload = async (imageUrl: string) => {
     setFormData(prev => ({ ...prev, avatar_url: imageUrl }))
+    
+    // Auto-save the profile picture immediately
+    try {
+      setLoading(true)
+      const response = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          ...formData, 
+          avatar_url: imageUrl 
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save profile picture')
+      }
+
+      // Refresh profile data to get latest from DB
+      await refreshProfile()
+      console.log('✅ Profile picture saved successfully')
+    } catch (error) {
+      console.error('❌ Error saving profile picture:', error)
+      alert('Profile picture uploaded but failed to save. Please click Save Changes.')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleImageRemove = () => {
+  const handleImageRemove = async () => {
     setFormData(prev => ({ ...prev, avatar_url: null }))
+    
+    // Auto-save the removal immediately
+    try {
+      setLoading(true)
+      const response = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          ...formData, 
+          avatar_url: null 
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to remove profile picture')
+      }
+
+      await refreshProfile()
+      console.log('✅ Profile picture removed successfully')
+    } catch (error) {
+      console.error('❌ Error removing profile picture:', error)
+      alert('Failed to remove profile picture. Please click Save Changes.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleShareProfile = async () => {

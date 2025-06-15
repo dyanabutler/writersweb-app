@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { User, Settings, Cloud, CreditCard, LogOut, Crown } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 import Link from "next/link"
 
 interface UserMenuProps {

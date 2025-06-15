@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { Character } from "@/lib/types"
 import { Users, MapPin } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
-import { getCharacterStatusColor } from "@/lib/design-system"
+import { useDesignSystem } from "@/components/design-system"
+import { getCharacterStatusColor } from "@/components/design-system"
 
 interface CharacterCardProps {
   character: Character

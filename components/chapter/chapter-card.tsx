@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { Chapter } from "@/lib/types"
 import { Clock, MapPin, Eye, FileText } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
-import { getStatusColor } from "@/lib/design-system"
+import { useDesignSystem } from "@/components/design-system"
+import { getStatusColor } from "@/components/design-system"
 
 interface ChapterCardProps {
   chapter: Chapter

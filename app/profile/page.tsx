@@ -18,7 +18,7 @@ import {
   Share2,
   Settings
 } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 import Image from "next/image"
 import Link from "next/link"
 import { ProfileEditor } from "@/components/profile/profile-editor"

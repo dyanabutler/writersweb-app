@@ -17,7 +17,7 @@ import {
   Eye,
   EyeOff
 } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
+import { useDesignSystem } from "@/components/design-system"
 import type { StoryMetadata, Character, Location, Scene } from "@/lib/types"
 
 export function FeaturedContentManager() {

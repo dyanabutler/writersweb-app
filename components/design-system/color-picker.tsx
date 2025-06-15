@@ -75,7 +75,7 @@ export function ColorPicker({ label, color, onChange, size = "md" }: ColorPicker
                   type="color"
                   value={color}
                   onChange={(e) => handleColorChange(e.target.value)}
-                  className="w-full h-10 rounded border cursor-pointer"
+                  className="w-full h-10 rounded cursor-pointer"
                 />
               </div>
 
@@ -90,7 +90,7 @@ export function ColorPicker({ label, color, onChange, size = "md" }: ColorPicker
                   {presetColors.map((presetColor) => (
                     <button
                       key={presetColor}
-                      className="w-8 h-8 rounded border-2 border-gray-200 hover:border-gray-400 transition-colors"
+                      className="w-8 h-8 rounded transition-colors"
                       style={{ backgroundColor: presetColor }}
                       onClick={() => handleColorChange(presetColor)}
                     />

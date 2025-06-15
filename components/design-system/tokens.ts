@@ -1,4 +1,4 @@
-// Design System Constants and Tokens
+// Design System Tokens and Types
 export interface DesignTokens {
   colors: {
     // App-wide colors
@@ -163,128 +163,128 @@ export interface DesignTokens {
   }
 }
 
-// Default design tokens
+// Default design tokens - Obsidian theme
 export const defaultDesignTokens: DesignTokens = {
   colors: {
     background: {
-      primary: "#ffffff",
-      secondary: "#f9fafb",
-      tertiary: "#f3f4f6",
+      primary: "#0a0a0a", // Deep obsidian black
+      secondary: "#1a1a1a", // Dark charcoal
+      tertiary: "#2a2a2a", // Medium charcoal
     },
     text: {
-      primary: "#111827",
-      secondary: "#374151",
-      muted: "#6b7280",
-      inverse: "#ffffff",
+      primary: "#f8f9fa", // Bright white
+      secondary: "#e9ecef", // Off white
+      muted: "#adb5bd", // Light gray
+      inverse: "#0a0a0a", // Deep black
     },
     icons: {
-      primary: "#374151",
-      secondary: "#6b7280",
-      muted: "#9ca3af",
-      accent: "#3b82f6",
+      primary: "#e9ecef", // Off white
+      secondary: "#adb5bd", // Light gray
+      muted: "#6c757d", // Medium gray
+      accent: "#7c3aed", // Bright purple accent
     },
     primary: {
-      50: "#eff6ff",
-      100: "#dbeafe",
-      500: "#3b82f6",
-      600: "#2563eb",
-      700: "#1d4ed8",
-      900: "#1e3a8a",
+      50: "#f3f0ff", // Very light purple
+      100: "#e0d7ff", // Light purple
+      500: "#7c3aed", // Bright purple
+      600: "#6d28d9", // Deep purple
+      700: "#5b21b6", // Darker purple
+      900: "#3b0764", // Very dark purple
     },
     secondary: {
-      50: "#f0fdf4",
-      100: "#dcfce7",
-      500: "#22c55e",
-      600: "#16a34a",
-      700: "#15803d",
+      50: "#ecfdf5", // Light mint
+      100: "#d1fae5", // Mint
+      500: "#10b981", // Emerald
+      600: "#059669", // Deep emerald
+      700: "#047857", // Dark emerald
     },
     status: {
       draft: {
-        bg: "#fef3c7",
-        text: "#92400e",
+        bg: "#fbbf24", // Amber
+        text: "#0a0a0a", // Dark text for contrast
       },
       review: {
-        bg: "#dbeafe",
-        text: "#1e40af",
+        bg: "#3b82f6", // Blue
+        text: "#ffffff", // White text
       },
       complete: {
-        bg: "#d1fae5",
-        text: "#065f46",
+        bg: "#10b981", // Emerald
+        text: "#ffffff", // White text
       },
       published: {
-        bg: "#e9d5ff",
-        text: "#7c3aed",
+        bg: "#7c3aed", // Purple
+        text: "#ffffff", // White text
       },
     },
     characterStatus: {
       alive: {
-        bg: "#d1fae5",
-        text: "#065f46",
+        bg: "#10b981", // Emerald
+        text: "#ffffff", // White text
       },
       deceased: {
-        bg: "#fee2e2",
-        text: "#991b1b",
+        bg: "#ef4444", // Red
+        text: "#ffffff", // White text
       },
       missing: {
-        bg: "#fef3c7",
-        text: "#92400e",
+        bg: "#f59e0b", // Orange
+        text: "#0a0a0a", // Dark text
       },
       unknown: {
-        bg: "#f3f4f6",
-        text: "#374151",
+        bg: "#6c757d", // Gray
+        text: "#ffffff", // White text
       },
     },
     locationType: {
       city: {
-        bg: "#dbeafe",
-        text: "#1e40af",
+        bg: "#3b82f6", // Blue
+        text: "#ffffff", // White text
       },
       building: {
-        bg: "#d1fae5",
-        text: "#065f46",
+        bg: "#10b981", // Emerald
+        text: "#ffffff", // White text
       },
       landmark: {
-        bg: "#e9d5ff",
-        text: "#7c3aed",
+        bg: "#7c3aed", // Purple
+        text: "#ffffff", // White text
       },
       region: {
-        bg: "#fed7aa",
-        text: "#c2410c",
+        bg: "#f59e0b", // Orange
+        text: "#0a0a0a", // Dark text
       },
       other: {
-        bg: "#f3f4f6",
-        text: "#374151",
+        bg: "#6c757d", // Gray
+        text: "#ffffff", // White text
       },
     },
     imageType: {
       character: {
-        bg: "#dbeafe",
-        text: "#1e40af",
+        bg: "#3b82f6", // Blue
+        text: "#ffffff", // White text
       },
       location: {
-        bg: "#d1fae5",
-        text: "#065f46",
+        bg: "#10b981", // Emerald
+        text: "#ffffff", // White text
       },
       scene: {
-        bg: "#e9d5ff",
-        text: "#7c3aed",
+        bg: "#7c3aed", // Purple
+        text: "#ffffff", // White text
       },
       reference: {
-        bg: "#f3f4f6",
-        text: "#374151",
+        bg: "#6c757d", // Gray
+        text: "#ffffff", // White text
       },
     },
     neutral: {
-      50: "#f9fafb",
-      100: "#f3f4f6",
-      200: "#e5e7eb",
-      300: "#d1d5db",
-      400: "#9ca3af",
-      500: "#6b7280",
-      600: "#4b5563",
-      700: "#374151",
-      800: "#1f2937",
-      900: "#111827",
+      50: "#f8f9fa", // Nearly white
+      100: "#e9ecef", // Light gray
+      200: "#dee2e6", // Medium light gray
+      300: "#ced4da", // Medium gray
+      400: "#adb5bd", // Gray
+      500: "#6c757d", // Medium dark gray
+      600: "#495057", // Dark gray
+      700: "#343a40", // Darker gray
+      800: "#212529", // Very dark gray
+      900: "#0a0a0a", // Black
     },
   },
   spacing: {
@@ -338,4 +338,4 @@ export const getLocationTypeColor = (type: string, tokens: DesignTokens) => {
 export const getImageTypeColor = (type: string, tokens: DesignTokens) => {
   const typeKey = type as keyof typeof tokens.colors.imageType
   return tokens.colors.imageType[typeKey] || tokens.colors.imageType.reference
-}
+} 

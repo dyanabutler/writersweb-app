@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { Location } from "@/lib/types"
 import { Users, BookOpen } from "lucide-react"
-import { useDesignSystem } from "@/lib/contexts/design-system-context"
-import { getLocationTypeColor } from "@/lib/design-system"
+import { useDesignSystem } from "@/components/design-system"
+import { getLocationTypeColor } from "@/components/design-system"
 
 interface LocationCardProps {
   location: Location

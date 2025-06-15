@@ -10,7 +10,7 @@ export default function HomePage() {
           <h1 className="text-3xl font-bold" style={{ color: "var(--text-primary)" }}>
             Dashboard
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
             Welcome back! Here's what's happening with your stories.
           </p>
         </div>
