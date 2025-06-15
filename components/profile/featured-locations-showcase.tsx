@@ -90,9 +90,9 @@ export function FeaturedLocationsShowcase({ locations, authorName }: FeaturedLoc
                 <div className="flex items-start gap-3">
                                      <div 
                      className="p-2 rounded-lg shrink-0"
-                     style={{ backgroundColor: tokens.colors.secondary[100] }}
-                   >
-                     <LocationIcon className="w-5 h-5" style={{ color: tokens.colors.secondary[600] }} />
+                             style={{ backgroundColor: tokens.colors.primary[100] }}
+      >
+        <LocationIcon className="w-5 h-5" style={{ color: tokens.colors.primary[600] }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <CardTitle className="text-lg leading-tight group-hover:text-green-600 transition-colors truncate">

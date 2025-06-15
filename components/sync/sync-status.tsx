@@ -11,8 +11,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useDesignSystem } from "@/components/design-system"
+import Link from "next/link"
 
 export function SyncStatus() {
+  const { tokens } = useDesignSystem()
   const { isLocal, isPro, isLoading } = useDataLayerContext()
   const [isOnline, setIsOnline] = useState(true)
   const [lastSync, setLastSync] = useState<Date>(new Date())
@@ -46,17 +49,17 @@ export function SyncStatus() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-gray-500">
-        <div className="animate-pulse w-4 h-4 bg-gray-300 rounded"></div>
+      <div className="flex items-center gap-2 text-sm" style={{ color: tokens.colors.text.muted }}>
+        <div className="animate-pulse w-4 h-4 rounded" style={{ backgroundColor: tokens.colors.neutral[300] }}></div>
         <span>Loading...</span>
       </div>
     )
   }
 
   const getStatusIcon = () => {
-    if (isLocal) return <CloudOff className="w-4 h-4 text-gray-500" />
-    if (!isOnline) return <WifiOff className="w-4 h-4 text-gray-400" />
-    return <Cloud className="w-4 h-4 text-green-500" />
+    if (isLocal) return <CloudOff className="w-4 h-4" style={{ color: tokens.colors.icons.muted }} />
+    if (!isOnline) return <WifiOff className="w-4 h-4" style={{ color: tokens.colors.icons.secondary }} />
+    return <Cloud className="w-4 h-4" style={{ color: tokens.colors.status.complete.bg }} />
   }
 
   const getStatusText = () => {
@@ -76,7 +79,15 @@ export function SyncStatus() {
       <div className="flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Badge variant={getStatusColor()} className="flex items-center gap-1">
+            <Badge 
+              variant={getStatusColor()} 
+              className="flex items-center gap-1 backdrop-blur-md border-[0.5px]"
+              style={{
+                backgroundColor: `${tokens.colors.background.secondary}80`,
+                borderColor: `${tokens.colors.border.primary}80`,
+                color: tokens.colors.text.primary,
+              }}
+            >
               {getStatusIcon()}
               <span className="text-xs">{getStatusText()}</span>
             </Badge>
@@ -86,21 +97,21 @@ export function SyncStatus() {
               {isLocal ? (
                 <>
                   <p className="font-medium">Local Storage Mode</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm" style={{ color: tokens.colors.text.secondary }}>
                     Your data is stored locally on this device only.
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm" style={{ color: tokens.colors.text.secondary }}>
                     Upgrade to Pro for cloud sync across devices.
                   </p>
                 </>
               ) : (
                 <>
                   <p className="font-medium">Cloud Sync Active</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm" style={{ color: tokens.colors.text.secondary }}>
                     Your data is automatically synced to the cloud.
                   </p>
                   {!isOnline && (
-                    <p className="text-sm text-orange-600">
+                    <p className="text-sm" style={{ color: tokens.colors.status.draft.bg }}>
                       Offline - changes will sync when online.
                     </p>
                   )}
@@ -113,10 +124,12 @@ export function SyncStatus() {
         {isLocal && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button size="sm" variant="outline" className="h-6 px-2">
-                <Zap className="w-3 h-3 mr-1" />
-                <span className="text-xs">Upgrade</span>
-              </Button>
+              <Link href="/pricing">
+                <Button size="sm" variant="glass" className="h-6 px-2">
+                  <Zap className="w-3 h-3 mr-1" />
+                  <span className="text-xs">Upgrade</span>
+                </Button>
+              </Link>
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p>Upgrade to Pro for cloud sync, unlimited stories, and more!</p>

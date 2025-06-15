@@ -39,7 +39,7 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
             className="rounded-full"
           />
           {user.subscription === "pro" && (
-            <Crown className="absolute -top-1 -right-1 w-4 h-4" style={{ color: tokens.colors.secondary[500] }} />
+            <Crown className="absolute -top-1 -right-1 w-4 h-4" style={{ color: tokens.colors.primary[500] }} />
           )}
         </Button>
       </DropdownMenuTrigger>
@@ -56,8 +56,8 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
               style={
                 user.subscription === "pro"
                   ? {
-                      backgroundColor: tokens.colors.secondary[100],
-                      color: tokens.colors.secondary[700],
+                      backgroundColor: tokens.colors.primary[100],
+                      color: tokens.colors.primary[700],
                     }
                   : {}
               }

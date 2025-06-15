@@ -59,7 +59,7 @@ export function PricingPlans() {
           className={`relative ${plan.popular ? "ring-2" : ""}`}
           style={{
             backgroundColor: tokens.colors.background.secondary,
-            ringColor: plan.popular ? tokens.colors.primary[500] : "transparent",
+            ...(plan.popular && { "--tw-ring-color": tokens.colors.primary[500] } as any),
           }}
         >
           {plan.popular && (
@@ -109,7 +109,7 @@ export function PricingPlans() {
               <ul className="space-y-2">
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-start gap-2">
-                    <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: tokens.colors.secondary[600] }} />
+                    <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: tokens.colors.primary[600] }} />
                     <span className="text-sm" style={{ color: tokens.colors.text.secondary }}>
                       {feature}
                     </span>
@@ -141,7 +141,7 @@ export function PricingPlans() {
 
             <Button
               className="w-full"
-              variant={plan.name === "Free" ? "outline" : "default"}
+              variant={plan.name === "Free" ? "primary-outline" : "primary"}
               disabled={plan.name === "Free"}
               style={
                 plan.name === "Pro"

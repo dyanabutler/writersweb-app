@@ -64,13 +64,13 @@ export function StoryOverview() {
       label: "Total Chapters", 
       value: stats.chapterCount, 
       icon: BookOpen, 
-      color: tokens.colors.primary[600]
+      color: tokens.colors.icons.accent  
     },
     { 
       label: "Characters", 
       value: stats.characterCount, 
       icon: Users, 
-      color: tokens.colors.secondary[600] 
+      color: tokens.colors.icons.accent 
     },
     { 
       label: "Locations", 
@@ -82,13 +82,13 @@ export function StoryOverview() {
       label: "Scenes", 
       value: stats.sceneCount, 
       icon: Clock, 
-      color: tokens.colors.neutral[600] 
+      color: tokens.colors.icons.accent 
     },
     { 
       label: "Total Words", 
       value: stats.totalWords.toLocaleString(), 
       icon: FileText, 
-      color: tokens.colors.primary[500] 
+      color: tokens.colors.icons.accent 
     },
   ]
 

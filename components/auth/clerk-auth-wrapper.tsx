@@ -50,7 +50,7 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
                 <Cloud className="w-5 h-5" style={{ color: tokens.colors.icons.accent }} />
                 Verify Your Email
               </CardTitle>
-              <Button variant="ghost" size="sm" onClick={() => {
+              <Button variant="primary-ghost" size="sm" onClick={() => {
                 setShowVerification(false)
                 // Reset Clerk state
                 if (signUp && signUp.status !== "complete") {
@@ -101,7 +101,7 @@ export function ClerkAuthWrapper({ isOpen, onClose }: ClerkAuthWrapperProps) {
               <Cloud className="w-5 h-5" style={{ color: tokens.colors.icons.accent }} />
               Welcome to Story Manager
             </CardTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
+            <Button variant="primary-ghost" size="sm" onClick={onClose}>
               <X className="w-4 h-4" />
             </Button>
           </div>

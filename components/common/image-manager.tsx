@@ -80,7 +80,7 @@ export function ImageManager({
             <div className="flex items-center gap-2">
               <Button
                 type="button"
-                variant="outline"
+                variant="primary-outline"
                 disabled={uploading || images.length >= maxImages}
                 onClick={() => {
                   const input = document.createElement('input')
@@ -136,7 +136,7 @@ export function ImageManager({
               />
               <Button
                 type="button"
-                variant="destructive"
+                variant="danger"
                 size="sm"
                 className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
                 onClick={() => removeImage(index)}

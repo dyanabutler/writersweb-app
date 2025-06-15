@@ -153,7 +153,7 @@ export function VerificationStep({ mode, emailAddress, onBack, onSuccess }: Veri
 
           <Button
             type="button"
-            variant="ghost"
+            variant="primary-ghost"
             onClick={onBack}
             className="w-full"
           >

@@ -31,7 +31,7 @@ export function BillingPanel() {
       <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2" style={{ color: tokens.colors.text.primary }}>
-            <Crown className="w-5 h-5" style={{ color: tokens.colors.secondary[600] }} />
+            <Crown className="w-5 h-5" style={{ color: tokens.colors.primary[600] }} />
             Current Subscription
           </CardTitle>
         </CardHeader>
@@ -42,7 +42,7 @@ export function BillingPanel() {
                 <h3 className="text-lg font-semibold" style={{ color: tokens.colors.text.primary }}>
                   Story Manager Pro
                 </h3>
-                <Badge style={{ backgroundColor: tokens.colors.secondary[100], color: tokens.colors.secondary[700] }}>
+                <Badge style={{ backgroundColor: tokens.colors.status.complete.bg, color: tokens.colors.status.complete.text }}>
                   Active
                 </Badge>
               </div>
@@ -78,8 +78,8 @@ export function BillingPanel() {
           </div>
 
           <div className="flex gap-2 pt-4">
-            <Button variant="outline">Update Payment Method</Button>
-            <Button variant="outline">Cancel Subscription</Button>
+            <Button variant="neutral-outline">Update Payment Method</Button>
+            <Button variant="neutral-outline">Cancel Subscription</Button>
           </div>
         </CardContent>
       </Card>
@@ -100,7 +100,7 @@ export function BillingPanel() {
               </div>
             </div>
             <div className="text-center p-4 rounded-lg" style={{ backgroundColor: tokens.colors.background.tertiary }}>
-              <div className="text-2xl font-bold" style={{ color: tokens.colors.secondary[600] }}>
+              <div className="text-2xl font-bold" style={{ color: tokens.colors.primary[600] }}>
                 3.2 MB
               </div>
               <div className="text-sm" style={{ color: tokens.colors.text.muted }}>
@@ -139,13 +139,13 @@ export function BillingPanel() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant="outline" style={{ color: tokens.colors.secondary[600] }}>
+                  <Badge variant="outline" style={{ color: tokens.colors.primary[600] }}>
                     {invoice.status}
                   </Badge>
                   <span className="font-medium" style={{ color: tokens.colors.text.primary }}>
                     {invoice.amount}
                   </span>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="neutral-ghost" size="sm">
                     <Download className="w-4 h-4" />
                   </Button>
                 </div>

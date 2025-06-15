@@ -239,19 +239,7 @@ export function DesignSystemEditor() {
                     </div>
                   </div>
 
-                  <div>
-                    <Label className="text-base font-medium">Secondary Colors</Label>
-                    <div className="grid grid-cols-3 gap-4 mt-3">
-                      {Object.entries(tokens.colors.secondary).map(([shade, color]) => (
-                        <ColorPicker
-                          key={shade}
-                          label={`Secondary ${shade}`}
-                          color={color}
-                          onChange={(newColor) => updateColor(`colors.secondary.${shade}`, newColor)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+
                 </CardContent>
               </Card>
             </TabsContent>
@@ -444,15 +432,7 @@ export function DesignSystemEditor() {
                     </div>
                   </div>
 
-                  <div>
-                    <Label className="text-base font-medium">Secondary Variants</Label>
-                    <div className="flex flex-wrap gap-3 mt-3">
-                      <Button variant="secondary">Secondary</Button>
-                      <Button variant="secondary-outline">Secondary Outline</Button>
-                      <Button variant="secondary-ghost">Secondary Ghost</Button>
-                      <Button variant="secondary-soft">Secondary Soft</Button>
-                    </div>
-                  </div>
+
 
                   <div>
                     <Label className="text-base font-medium">Status Variants</Label>
@@ -534,7 +514,7 @@ export function DesignSystemEditor() {
                       <Button variant="primary" leftIcon={<Save />}>
                         Save Changes
                       </Button>
-                      <Button variant="secondary" rightIcon={<ArrowRight />}>
+                      <Button variant="neutral" rightIcon={<ArrowRight />}>
                         Continue
                       </Button>
                       <Button variant="success" leftIcon={<Send />}>
@@ -552,7 +532,7 @@ export function DesignSystemEditor() {
                       <Button variant="primary" loading>
                         Loading...
                       </Button>
-                      <Button variant="secondary" loading loadingText="Saving...">
+                      <Button variant="neutral" loading loadingText="Saving...">
                         Save
                       </Button>
                       <Button variant="success" loading loadingText="Publishing...">
@@ -582,8 +562,8 @@ export function DesignSystemEditor() {
                       <Button variant="primary" disabled>
                         Disabled Primary
                       </Button>
-                      <Button variant="secondary" disabled>
-                        Disabled Secondary
+                      <Button variant="neutral" disabled>
+                        Disabled Neutral
                       </Button>
                       <Button variant="success" disabled>
                         Disabled Success
@@ -606,7 +586,7 @@ export function DesignSystemEditor() {
                       <Button variant="primary" leftIcon={<Plus />}>
                         Create New Story
                       </Button>
-                      <Button variant="secondary-outline" leftIcon={<Edit />}>
+                      <Button variant="neutral-outline" leftIcon={<Edit />}>
                         Edit
                       </Button>
                       <Button variant="danger-ghost" size="icon">

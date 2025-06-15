@@ -43,7 +43,7 @@ export function ChapterEditor({ chapter: initialChapter }: ChapterEditorProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link href="/chapters">
-            <Button variant="ghost" size="sm">
+            <Button variant="primary-ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Chapters
             </Button>

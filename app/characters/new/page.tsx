@@ -201,7 +201,7 @@ export default function NewCharacterPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/characters">
-            <Button variant="ghost" size="sm">
+            <Button variant="primary-ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Characters
             </Button>

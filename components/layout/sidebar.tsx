@@ -22,13 +22,12 @@ export function Sidebar() {
 
   return (
     <nav
-      className="w-16 shadow-sm border-r flex flex-col"
+      className="w-16 shadow-sm flex flex-col"
       style={{ 
-        backgroundColor: tokens.colors.background.secondary,
-        borderColor: tokens.colors.border.secondary
+        backgroundColor: tokens.colors.background.secondary
       }}
     >
-      <div className="p-3 border-b" style={{ borderColor: tokens.colors.border.muted }}>
+      <div className="p-3">
         <Link href="/" className="block">
           <div
             className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-lg"

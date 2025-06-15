@@ -100,7 +100,7 @@ export function ProfilePictureUpload({
           </div>
           <div className="flex gap-2">
             <Button
-              variant="outline"
+              variant="primary-outline"
               size="sm"
               onClick={() => inputRef.current?.click()}
               disabled={uploading || loading}
@@ -113,7 +113,7 @@ export function ProfilePictureUpload({
               Change
             </Button>
             <Button
-              variant="outline"
+              variant="primary-outline"
               size="sm"
               onClick={onImageRemove}
               disabled={uploading || loading}

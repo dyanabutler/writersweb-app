@@ -71,7 +71,7 @@ export function ProfileEditor({
         <div className="flex items-center justify-between">
           <CardTitle>Quick Profile Edit</CardTitle>
           <div className="flex gap-2">
-            <Button variant="outline" asChild>
+            <Button variant="primary-outline" asChild>
               <Link href="/settings">
                 <Settings className="w-4 h-4 mr-2" />
                 Full Settings
@@ -94,7 +94,7 @@ export function ProfileEditor({
                 </>
               )}
             </Button>
-            <Button variant="outline" onClick={onCancel} disabled={loading}>
+            <Button variant="primary-outline" onClick={onCancel} disabled={loading}>
               <X className="w-4 h-4 mr-2" />
               Cancel
             </Button>

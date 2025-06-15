@@ -50,35 +50,6 @@ export function DraftsList() {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Draft Summary</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-orange-600">{totalDrafts}</div>
-              <div className="text-sm text-gray-600">Total Drafts</div>
-            </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <BookOpen className="w-6 h-6 mx-auto mb-1 text-blue-600" />
-              <div className="text-xl font-bold">{draftChapters.length}</div>
-              <div className="text-sm text-gray-600">Draft Chapters</div>
-            </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <Users className="w-6 h-6 mx-auto mb-1 text-green-600" />
-              <div className="text-xl font-bold">{draftCharacters.length}</div>
-              <div className="text-sm text-gray-600">Incomplete Characters</div>
-            </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <MapPin className="w-6 h-6 mx-auto mb-1 text-purple-600" />
-              <div className="text-xl font-bold">{draftLocations.length}</div>
-              <div className="text-sm text-gray-600">Incomplete Locations</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       <Tabs defaultValue="chapters" className="space-y-4">
         <TabsList>
           <TabsTrigger value="chapters">Chapters ({draftChapters.length})</TabsTrigger>

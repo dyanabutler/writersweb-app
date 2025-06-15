@@ -45,20 +45,7 @@ export function ButtonShowcase() {
         </CardContent>
       </Card>
 
-      {/* Secondary Variants */}
-      <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
-        <CardHeader>
-          <CardTitle style={{ color: tokens.colors.text.primary }}>Secondary Variants</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-wrap gap-3">
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="secondary-outline">Secondary Outline</Button>
-            <Button variant="secondary-ghost">Secondary Ghost</Button>
-            <Button variant="secondary-soft">Secondary Soft</Button>
-          </div>
-        </CardContent>
-      </Card>
+
 
       {/* Status Variants */}
       <Card style={{ backgroundColor: tokens.colors.background.secondary }}>
@@ -148,7 +135,7 @@ export function ButtonShowcase() {
             <Button variant="primary" leftIcon={<Download />}>
               Download
             </Button>
-            <Button variant="secondary" rightIcon={<ArrowRight />}>
+            <Button variant="neutral" rightIcon={<ArrowRight />}>
               Continue
             </Button>
             <Button variant="success" leftIcon={<Save />}>
@@ -171,7 +158,7 @@ export function ButtonShowcase() {
             <Button variant="primary" loading>
               Loading...
             </Button>
-            <Button variant="secondary" loading loadingText="Saving...">
+            <Button variant="neutral" loading loadingText="Saving...">
               Save
             </Button>
             <Button variant="success" loading loadingText="Uploading...">
@@ -211,8 +198,8 @@ export function ButtonShowcase() {
             <Button variant="primary" disabled>
               Disabled Primary
             </Button>
-            <Button variant="secondary" disabled>
-              Disabled Secondary
+            <Button variant="neutral" disabled>
+              Disabled Neutral
             </Button>
             <Button variant="success" disabled>
               Disabled Success
@@ -235,7 +222,7 @@ export function ButtonShowcase() {
               <Button variant="primary" leftIcon={<Plus />}>
                 Create New Story
               </Button>
-              <Button variant="secondary-outline" leftIcon={<Edit />}>
+              <Button variant="neutral-outline" leftIcon={<Edit />}>
                 Edit
               </Button>
               <Button variant="danger-ghost" size="icon">

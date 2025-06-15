@@ -30,10 +30,9 @@ export function Header() {
   if (loading) {
     return (
       <header
-        className="shadow-sm border-b px-6 py-4"
+        className="shadow-sm px-6 py-4"
         style={{ 
-          backgroundColor: tokens.colors.background.secondary,
-          borderColor: tokens.colors.border.secondary
+          backgroundColor: tokens.colors.background.secondary
         }}
       >
         <div className="flex items-center justify-between">
@@ -51,11 +50,8 @@ export function Header() {
   return (
     <>
       <header
-        className="shadow-sm border-b px-6 py-4"
-        style={{ 
-          backgroundColor: tokens.colors.background.secondary,
-          borderColor: tokens.colors.border.secondary
-        }}
+        className="shadow-sm px-6 py-4 bg-transparent"
+        
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -81,7 +77,7 @@ export function Header() {
           <div className="flex items-center space-x-4">
             {isSignedIn && <SyncStatus />}
 
-            <Button variant="neutral-ghost" size="sm">
+            <Button variant="primary-ghost" size="sm">
               <Bell className="w-5 h-5" style={{ color: tokens.colors.icons.secondary }} />
             </Button>
 

@@ -88,12 +88,7 @@ export function DesignSystemProvider({ children }: { children: React.ReactNode }
     root.style.setProperty("--primary-700", designTokens.colors.primary[700])
     root.style.setProperty("--primary-900", designTokens.colors.primary[900])
 
-    // Apply secondary colors
-    root.style.setProperty("--secondary-50", designTokens.colors.secondary[50])
-    root.style.setProperty("--secondary-100", designTokens.colors.secondary[100])
-    root.style.setProperty("--secondary-500", designTokens.colors.secondary[500])
-    root.style.setProperty("--secondary-600", designTokens.colors.secondary[600])
-    root.style.setProperty("--secondary-700", designTokens.colors.secondary[700])
+
 
     // Convert colors to HSL format for UI components
     const hexToHsl = (hex: string) => {
@@ -129,7 +124,7 @@ export function DesignSystemProvider({ children }: { children: React.ReactNode }
     root.style.setProperty("--popover-foreground", hexToHsl(designTokens.colors.text.primary))
     root.style.setProperty("--primary", hexToHsl(designTokens.colors.primary[500]))
     root.style.setProperty("--primary-foreground", hexToHsl(designTokens.colors.text.inverse))
-    root.style.setProperty("--secondary", hexToHsl(designTokens.colors.secondary[500]))
+    root.style.setProperty("--secondary", hexToHsl(designTokens.colors.neutral[500]))
     root.style.setProperty("--secondary-foreground", hexToHsl(designTokens.colors.text.primary))
     root.style.setProperty("--muted", hexToHsl(designTokens.colors.background.tertiary))
     root.style.setProperty("--muted-foreground", hexToHsl(designTokens.colors.text.muted))
@@ -145,9 +140,9 @@ export function DesignSystemProvider({ children }: { children: React.ReactNode }
     root.style.setProperty("--ring-offset-background", hexToHsl(designTokens.colors.background.primary))
     root.style.setProperty("--ring-offset-color", hexToHsl(designTokens.colors.background.primary))
     root.style.setProperty("--chart-1", hexToHsl(designTokens.colors.primary[500]))
-    root.style.setProperty("--chart-2", hexToHsl(designTokens.colors.secondary[500]))
+    root.style.setProperty("--chart-2", hexToHsl(designTokens.colors.neutral[500]))
     root.style.setProperty("--chart-3", hexToHsl(designTokens.colors.primary[600]))
-    root.style.setProperty("--chart-4", hexToHsl(designTokens.colors.secondary[600]))
+    root.style.setProperty("--chart-4", hexToHsl(designTokens.colors.neutral[600]))
     root.style.setProperty("--chart-5", hexToHsl(designTokens.colors.primary[700]))
     
     // Sidebar and navigation variables

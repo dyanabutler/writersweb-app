@@ -323,11 +323,11 @@ export default function SettingsPage() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" onClick={handleShareProfile}>
+                      <Button variant="primary-outline" onClick={handleShareProfile}>
                         <Share2 className="w-4 h-4 mr-2" />
                         Share
                       </Button>
-                      <Button asChild variant="outline">
+                      <Button asChild variant="primary-outline">
                         <Link href={`/profile/${user.id}`} target="_blank">
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Preview
@@ -335,7 +335,7 @@ export default function SettingsPage() {
                       </Button>
                     </div>
                   </div>
-                  <div className="p-2 bg-gray-100 rounded text-sm font-mono break-all">
+                  <div className="p-2  rounded text-sm font-mono break-all">
                     {profileUrl}
                   </div>
                 </div>
@@ -355,10 +355,10 @@ export default function SettingsPage() {
                   <Input 
                     value={user.emailAddresses?.[0]?.emailAddress || ""} 
                     disabled 
-                    className="bg-gray-50 flex-1"
+                    className=" flex-1"
                   />
                   <Button 
-                    variant="outline" 
+                    variant="primary-outline" 
                     size="sm"
                     asChild
                   >
@@ -444,7 +444,7 @@ export default function SettingsPage() {
                   <p className="text-sm mb-4" style={{ color: tokens.colors.text.muted }}>
                     Complete guides and tutorials
                   </p>
-                  <Button asChild variant="outline" className="w-full">
+                  <Button asChild variant="primary-outline" className="w-full">
                     <Link href="/help/docs">
                       Browse Documentation
                     </Link>
@@ -456,7 +456,7 @@ export default function SettingsPage() {
                   <p className="text-sm mb-4" style={{ color: tokens.colors.text.muted }}>
                     Get help and support
                   </p>
-                  <Button asChild variant="outline" className="w-full">
+                  <Button asChild variant="primary-outline" className="w-full">
                     <Link href="/help">
                       Visit Help Center
                     </Link>

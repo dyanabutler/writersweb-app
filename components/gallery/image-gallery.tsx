@@ -206,7 +206,7 @@ export function ImageGallery() {
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <h2 className="text-xl font-bold">{currentImage.alt}</h2>
-                <Button variant="ghost" onClick={handleCloseModal}>
+                <Button variant="primary-ghost" onClick={handleCloseModal}>
                   ×
                 </Button>
               </div>
@@ -222,7 +222,7 @@ export function ImageGallery() {
                   {filteredImages.length > 1 && (
                     <>
                       <Button
-                        variant="ghost"
+                        variant="primary-ghost"
                         size="icon"
                         className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/50 hover:bg-white/70 dark:bg-gray-800/50 dark:hover:bg-gray-800/70"
                         onClick={handlePrevImage}
@@ -230,7 +230,7 @@ export function ImageGallery() {
                         <ChevronLeft className="w-6 h-6" />
                       </Button>
                       <Button
-                        variant="ghost"
+                        variant="primary-ghost"
                         size="icon"
                         className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/50 hover:bg-white/70 dark:bg-gray-800/50 dark:hover:bg-gray-800/70"
                         onClick={handleNextImage}
@@ -243,7 +243,7 @@ export function ImageGallery() {
 
                 <div className="space-y-4">
                   <div>
-                    <Badge className={getTypeColor(currentImage.type)}>{currentImage.type}</Badge>
+                    <Badge style={{ backgroundColor: getTypeColor(currentImage.type).bg, color: getTypeColor(currentImage.type).text }}>{currentImage.type}</Badge>
                   </div>
 
                   {currentImage.tags && currentImage.tags.length > 0 && (

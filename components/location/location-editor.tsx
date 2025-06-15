@@ -41,7 +41,7 @@ export function LocationEditor({ location: initialLocation }: LocationEditorProp
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link href="/locations">
-            <Button variant="ghost" size="sm">
+            <Button variant="primary-ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Locations
             </Button>
@@ -133,12 +133,18 @@ export function LocationEditor({ location: initialLocation }: LocationEditorProp
         </div>
 
         <div className="space-y-6">
-          <ImageManager
-            images={location.images || []}
-            onImagesChange={(images) => updateLocation("images", images)}
-            title="Location Images"
-            type="location"
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle>Location Images</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ImageManager
+                images={location.images || []}
+                onImagesChange={(images) => updateLocation("images", images)}
+                type="location"
+              />
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>

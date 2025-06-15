@@ -53,9 +53,9 @@ export function FeaturedCharactersGallery({ characters, authorName }: FeaturedCh
         <div className="flex items-center gap-3">
           <div 
             className="p-2 rounded-lg"
-            style={{ backgroundColor: tokens.colors.secondary[100] }}
-          >
-            <Users className="w-6 h-6" style={{ color: tokens.colors.secondary[600] }} />
+                    style={{ backgroundColor: tokens.colors.primary[100] }}
+      >
+        <Users className="w-6 h-6" style={{ color: tokens.colors.primary[600] }} />
           </div>
           <div>
             <h2 className="text-2xl font-bold" style={{ color: tokens.colors.text.primary }}>
@@ -110,8 +110,8 @@ export function FeaturedCharactersGallery({ characters, authorName }: FeaturedCh
                   <Badge 
                     className="text-xs flex items-center gap-1"
                     style={{ 
-                      backgroundColor: tokens.colors.secondary[100],
-                      color: tokens.colors.secondary[700]
+                                  backgroundColor: tokens.colors.primary[100],
+            color: tokens.colors.primary[700]
                     }}
                   >
                     <RoleIcon className="w-3 h-3" />

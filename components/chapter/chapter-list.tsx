@@ -36,7 +36,7 @@ export function ChapterList() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-gray-600">{chapters.length} chapters</p>
-        <Button variant="outline" onClick={() => setShowOrderModal(true)}>
+        <Button variant="primary-outline" onClick={() => setShowOrderModal(true)}>
           <ArrowUpDown className="w-4 h-4 mr-2" />
           Reorder Chapters
         </Button>

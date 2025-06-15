@@ -146,9 +146,9 @@ export function SettingsPanel() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button variant="outline">Export as PDF</Button>
-            <Button variant="outline">Export as EPUB</Button>
-            <Button variant="outline">Backup Data</Button>
+            <Button variant="primary-outline">Export as PDF</Button>
+            <Button variant="primary-outline">Export as EPUB</Button>
+            <Button variant="primary-outline">Backup Data</Button>
           </div>
 
           <div className="text-sm" style={{ color: tokens.colors.text.muted }}>

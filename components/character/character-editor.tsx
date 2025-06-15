@@ -79,7 +79,7 @@ export function CharacterEditor({ character: initialCharacter }: CharacterEditor
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link href="/characters">
-            <Button variant="ghost" size="sm">
+            <Button variant="primary-ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Characters
             </Button>
@@ -197,7 +197,7 @@ export function CharacterEditor({ character: initialCharacter }: CharacterEditor
                     onChange={(e) => updateAffiliation(index, e.target.value)}
                     placeholder="Organization, group, etc."
                   />
-                  <Button variant="ghost" size="sm" onClick={() => removeAffiliation(index)}>
+                  <Button variant="primary-ghost" size="sm" onClick={() => removeAffiliation(index)}>
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
@@ -226,7 +226,7 @@ export function CharacterEditor({ character: initialCharacter }: CharacterEditor
                     onChange={(e) => updateRelationship(index, e.target.value)}
                     placeholder="Character Name - Relationship"
                   />
-                  <Button variant="ghost" size="sm" onClick={() => removeRelationship(index)}>
+                  <Button variant="primary-ghost" size="sm" onClick={() => removeRelationship(index)}>
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
@@ -239,7 +239,6 @@ export function CharacterEditor({ character: initialCharacter }: CharacterEditor
           <ImageManager
             images={character.images || []}
             onImagesChange={(images) => updateCharacter("images", images)}
-            title="Character Images"
             type="character"
           />
         </div>

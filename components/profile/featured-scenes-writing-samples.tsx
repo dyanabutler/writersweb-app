@@ -52,9 +52,9 @@ export function FeaturedScenesWritingSamples({ scenes, authorName }: FeaturedSce
         <div className="flex items-center gap-3">
           <div 
             className="p-2 rounded-lg"
-            style={{ backgroundColor: tokens.colors.secondary[100] }}
-          >
-            <Film className="w-6 h-6" style={{ color: tokens.colors.secondary[600] }} />
+                    style={{ backgroundColor: tokens.colors.primary[100] }}
+      >
+        <Film className="w-6 h-6" style={{ color: tokens.colors.primary[600] }} />
           </div>
           <div>
             <h2 className="text-2xl font-bold" style={{ color: tokens.colors.text.primary }}>
@@ -184,7 +184,7 @@ export function FeaturedScenesWritingSamples({ scenes, authorName }: FeaturedSce
                     {content.length > 300 && (
                       <div className="flex justify-center pt-4 border-t" style={{ borderColor: tokens.colors.neutral[200] }}>
                         <Button
-                          variant="ghost"
+                          variant="primary-ghost"
                           onClick={() => toggleExpanded(scene.slug)}
                           className="text-sm"
                           style={{ color: tokens.colors.primary[600] }}

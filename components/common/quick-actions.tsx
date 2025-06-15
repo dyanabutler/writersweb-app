@@ -18,7 +18,7 @@ export function QuickActions() {
       <CardContent className="space-y-2">
         {actions.map((action) => (
           <Link key={action.label} href={action.href}>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="glass" className="w-full justify-start">
               <action.icon className="w-4 h-4 mr-2" />
               {action.label}
             </Button>

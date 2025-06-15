@@ -158,7 +158,7 @@ export function PublicProfile({ profile, stories, characters, locations, scenes 
                   </div>
                 </div>
 
-                <Button onClick={handleShare} variant="outline">
+                <Button onClick={handleShare} variant="primary-outline">
                   <Share2 className="w-4 h-4 mr-2" />
                   Share Profile
                 </Button>

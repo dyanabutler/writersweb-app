@@ -35,14 +35,6 @@ export interface DesignTokens {
       700: string
       900: string
     }
-    // Secondary colors
-    secondary: {
-      50: string
-      100: string
-      500: string
-      600: string
-      700: string
-    }
     // Status colors
     status: {
       draft: {
@@ -201,13 +193,6 @@ export const defaultDesignTokens: DesignTokens = {
       600: "#6d28d9", // Deep purple
       700: "#5b21b6", // Darker purple
       900: "#3b0764", // Very dark purple
-    },
-    secondary: {
-      50: "#ecfdf5", // Light mint
-      100: "#d1fae5", // Mint
-      500: "#10b981", // Emerald
-      600: "#059669", // Deep emerald
-      700: "#047857", // Dark emerald
     },
     status: {
       draft: {

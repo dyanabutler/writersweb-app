@@ -168,14 +168,14 @@ export default function PrivateProfilePage() {
           My Profile
         </h1>
         <div className="flex gap-2">
-          <Button variant="outline" asChild>
+          <Button variant="primary-outline" asChild>
             <Link href="/settings">
               <Settings className="w-4 h-4 mr-2" />
               Settings
             </Link>
           </Button>
           {profileData.public_profile && (
-            <Button variant="outline" onClick={handleShareProfile}>
+            <Button variant="primary-outline" onClick={handleShareProfile}>
               <Share2 className="w-4 h-4 mr-2" />
               Share
             </Button>
@@ -212,7 +212,7 @@ export default function PrivateProfilePage() {
                   {profileData.full_name || "Writer"}
                 </h2>
                 <Button 
-                  variant="outline" 
+                  variant="primary-outline" 
                   size="sm"
                   onClick={() => setEditing(true)}
                 >
@@ -330,11 +330,11 @@ export default function PrivateProfilePage() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={handleShareProfile}>
+                <Button variant="primary-outline" onClick={handleShareProfile}>
                   <Share2 className="w-4 h-4 mr-2" />
                   Share
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild variant="primary-outline">
                   <Link href={`/profile/${user.id}`} target="_blank">
                     <ExternalLink className="w-4 h-4 mr-2" />
                     Preview

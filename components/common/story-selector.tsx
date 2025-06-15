@@ -99,7 +99,7 @@ export function StorySelector({ selectedStoryId, onStorySelect }: StorySelectorP
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="primary-outline"
           role="combobox"
           aria-expanded={open}
           className="w-[300px] justify-between"
@@ -149,7 +149,7 @@ export function StorySelector({ selectedStoryId, onStorySelect }: StorySelectorP
           </CommandGroup>
           <div className="border-t p-2">
             <Button
-              variant="ghost"
+              variant="primary-ghost"
               size="sm"
               className="w-full justify-start"
               onClick={handleCreateStory}
