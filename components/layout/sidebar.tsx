@@ -25,10 +25,10 @@ export function Sidebar() {
       className="w-16 shadow-sm border-r flex flex-col"
       style={{ 
         backgroundColor: tokens.colors.background.secondary,
-        borderColor: tokens.colors.neutral[200]
+        borderColor: tokens.colors.border.secondary
       }}
     >
-      <div className="p-3 border-b" style={{ borderColor: tokens.colors.neutral[200] }}>
+      <div className="p-3 border-b" style={{ borderColor: tokens.colors.border.muted }}>
         <Link href="/" className="block">
           <div
             className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-lg"

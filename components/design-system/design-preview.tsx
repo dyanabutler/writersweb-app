@@ -1,4 +1,4 @@
-"use client"
+  "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -49,6 +49,42 @@ export function DesignPreview() {
             <Users className="w-5 h-5" style={{ color: tokens.colors.icons.secondary }} />
             <MapPin className="w-5 h-5" style={{ color: tokens.colors.icons.muted }} />
             <ImageIcon className="w-5 h-5" style={{ color: tokens.colors.icons.accent }} />
+          </div>
+        </div>
+
+        {/* Border Colors Preview */}
+        <div>
+          <h4 className="font-medium mb-2" style={{ color: tokens.colors.text.primary }}>
+            Border Colors
+          </h4>
+          <div className="space-y-2">
+            <div 
+              className="p-3 rounded border-2"
+              style={{ 
+                borderColor: tokens.colors.border.primary,
+                backgroundColor: tokens.colors.background.tertiary
+              }}
+            >
+              <span style={{ color: tokens.colors.text.secondary }}>Primary Borders</span>
+            </div>
+            <div 
+              className="p-2 rounded border"
+              style={{ 
+                borderColor: tokens.colors.border.secondary,
+                backgroundColor: tokens.colors.background.tertiary
+              }}
+            >
+              <span style={{ color: tokens.colors.text.secondary }}>Secondary Borders</span>
+            </div>
+            <div 
+              className="p-2 rounded border"
+              style={{ 
+                borderColor: tokens.colors.border.muted,
+                backgroundColor: tokens.colors.background.tertiary
+              }}
+            >
+              <span style={{ color: tokens.colors.text.muted }}>Muted Borders</span>
+            </div>
           </div>
         </div>
 
@@ -123,7 +159,7 @@ export function DesignPreview() {
               Primary Button
             </Button>
             <Button
-              variant="outline"
+              variant="primary-outline"
               style={{
                 borderColor: tokens.colors.primary[600],
                 color: tokens.colors.primary[600],

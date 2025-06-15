@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useDesignSystem } from "./provider"
 
 interface ColorPickerProps {
   label: string
@@ -16,6 +17,7 @@ interface ColorPickerProps {
 }
 
 export function ColorPicker({ label, color, onChange, size = "md" }: ColorPickerProps) {
+  const { tokens } = useDesignSystem()
   const [isOpen, setIsOpen] = useState(false)
   const [inputValue, setInputValue] = useState(color)
 
@@ -55,43 +57,73 @@ export function ColorPicker({ label, color, onChange, size = "md" }: ColorPicker
 
   return (
     <div className="space-y-2">
-      <Label className={size === "sm" ? "text-xs" : "text-sm"}>{label}</Label>
+      <Label 
+        className={size === "sm" ? "text-xs" : "text-sm"}
+        style={{ color: tokens.colors.text.primary }}
+      >
+        {label}
+      </Label>
       <div className="flex items-center space-x-2">
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button
-              variant="outline"
-              className={`${size === "sm" ? "w-8 h-8" : "w-12 h-12"} p-0 border-2`}
-              style={{ backgroundColor: color }}
+              variant="primary-outline"
+              className={`${size === "sm" ? "w-8 h-8" : "w-12 h-12"} p-0 border`}
+              style={{ 
+                backgroundColor: color,
+                borderColor: tokens.colors.border.primary,
+                borderWidth: '1px'
+              }}
             >
               <span className="sr-only">Pick color</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-64">
+          <PopoverContent 
+            className="w-64"
+            style={{ 
+              backgroundColor: tokens.colors.background.secondary,
+              borderColor: tokens.colors.border.secondary,
+              borderWidth: '1px'
+            }}
+          >
             <div className="space-y-3">
               <div>
-                <Label>Color Picker</Label>
+                <Label style={{ color: tokens.colors.text.primary }}>Color Picker</Label>
                 <input
                   type="color"
                   value={color}
                   onChange={(e) => handleColorChange(e.target.value)}
-                  className="w-full h-10 rounded cursor-pointer"
+                  className="w-full h-10 rounded cursor-pointer border"
+                  style={{ borderColor: tokens.colors.border.muted }}
                 />
               </div>
 
               <div>
-                <Label>Hex Value</Label>
-                <Input value={inputValue} onChange={handleInputChange} placeholder="#000000" className="font-mono" />
+                <Label style={{ color: tokens.colors.text.primary }}>Hex Value</Label>
+                <Input 
+                  value={inputValue} 
+                  onChange={handleInputChange} 
+                  placeholder="#000000" 
+                  className="font-mono" 
+                  style={{ 
+                    backgroundColor: tokens.colors.background.tertiary,
+                    borderColor: tokens.colors.border.primary,
+                    color: tokens.colors.text.primary
+                  }}
+                />
               </div>
 
               <div>
-                <Label>Presets</Label>
+                <Label style={{ color: tokens.colors.text.primary }}>Presets</Label>
                 <div className="grid grid-cols-6 gap-2 mt-2">
                   {presetColors.map((presetColor) => (
                     <button
                       key={presetColor}
-                      className="w-8 h-8 rounded transition-colors"
-                      style={{ backgroundColor: presetColor }}
+                      className="w-8 h-8 rounded transition-colors border"
+                      style={{ 
+                        backgroundColor: presetColor,
+                        borderColor: tokens.colors.border.muted
+                      }}
                       onClick={() => handleColorChange(presetColor)}
                     />
                   ))}
@@ -102,7 +134,17 @@ export function ColorPicker({ label, color, onChange, size = "md" }: ColorPicker
         </Popover>
 
         {size !== "sm" && (
-          <Input value={inputValue} onChange={handleInputChange} className="font-mono text-xs" placeholder="#000000" />
+          <Input 
+            value={inputValue} 
+            onChange={handleInputChange} 
+            className="font-mono text-xs" 
+            placeholder="#000000"
+            style={{ 
+              backgroundColor: tokens.colors.background.tertiary,
+              borderColor: tokens.colors.border.primary,
+              color: tokens.colors.text.primary
+            }}
+          />
         )}
       </div>
     </div>

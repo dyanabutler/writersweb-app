@@ -30,7 +30,7 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+        <Button variant="neutral-ghost" className="relative h-10 w-10 rounded-full">
           <Image
             src={user.avatar || "/placeholder.svg"}
             alt={user.name}

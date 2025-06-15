@@ -33,7 +33,7 @@ export function Header() {
         className="shadow-sm border-b px-6 py-4"
         style={{ 
           backgroundColor: tokens.colors.background.secondary,
-          borderColor: tokens.colors.neutral[200]
+          borderColor: tokens.colors.border.secondary
         }}
       >
         <div className="flex items-center justify-between">
@@ -54,7 +54,7 @@ export function Header() {
         className="shadow-sm border-b px-6 py-4"
         style={{ 
           backgroundColor: tokens.colors.background.secondary,
-          borderColor: tokens.colors.neutral[200]
+          borderColor: tokens.colors.border.secondary
         }}
       >
         <div className="flex items-center justify-between">
@@ -71,7 +71,7 @@ export function Header() {
                 style={{
                   backgroundColor: tokens.colors.background.primary,
                   color: tokens.colors.text.primary,
-                  borderColor: tokens.colors.neutral[300],
+                  borderColor: tokens.colors.border.primary,
                   ...({"--tw-ring-color": tokens.colors.primary[500]} as any),
                 }}
               />
@@ -81,14 +81,14 @@ export function Header() {
           <div className="flex items-center space-x-4">
             {isSignedIn && <SyncStatus />}
 
-            <Button variant="ghost" size="sm">
+            <Button variant="neutral-ghost" size="sm">
               <Bell className="w-5 h-5" style={{ color: tokens.colors.icons.secondary }} />
             </Button>
 
             {isSignedIn && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2 p-2">
+                  <button className="flex items-center gap-2 p-2 rounded-lg transition-colors hover:bg-opacity-10" style={{ backgroundColor: 'transparent' }}>
                     <Image
                       src={avatarUrl}
                       alt={displayName}
@@ -99,7 +99,7 @@ export function Header() {
                     <span className="hidden md:block text-sm font-medium" style={{ color: tokens.colors.text.primary }}>
                       {firstName}
                     </span>
-                  </Button>
+                  </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="px-2 py-1.5">

@@ -21,7 +21,18 @@ export function DesignSystemProvider({ children }: { children: React.ReactNode }
     if (savedTokens) {
       try {
         const parsedTokens = JSON.parse(savedTokens)
-        setTokens({ ...defaultDesignTokens, ...parsedTokens })
+        // Merge with defaults to ensure new properties exist
+        const mergedTokens = {
+          ...defaultDesignTokens,
+          ...parsedTokens,
+          colors: {
+            ...defaultDesignTokens.colors,
+            ...parsedTokens.colors,
+            // Ensure border colors exist (migration for old saved tokens)
+            border: parsedTokens.colors?.border || defaultDesignTokens.colors.border
+          }
+        }
+        setTokens(mergedTokens)
       } catch (error) {
         console.error("Failed to parse saved design tokens:", error)
       }
@@ -62,6 +73,12 @@ export function DesignSystemProvider({ children }: { children: React.ReactNode }
     root.style.setProperty("--icon-secondary", designTokens.colors.icons.secondary)
     root.style.setProperty("--icon-muted", designTokens.colors.icons.muted)
     root.style.setProperty("--icon-accent", designTokens.colors.icons.accent)
+
+    // Apply border colors (with fallback for migration)
+    const borderColors = designTokens.colors.border || defaultDesignTokens.colors.border
+    root.style.setProperty("--border-primary", borderColors.primary)
+    root.style.setProperty("--border-secondary", borderColors.secondary)
+    root.style.setProperty("--border-muted", borderColors.muted)
 
     // Apply primary colors
     root.style.setProperty("--primary-50", designTokens.colors.primary[50])
@@ -120,7 +137,7 @@ export function DesignSystemProvider({ children }: { children: React.ReactNode }
     root.style.setProperty("--accent-foreground", hexToHsl(designTokens.colors.text.primary))
     root.style.setProperty("--destructive", hexToHsl("#ef4444"))
     root.style.setProperty("--destructive-foreground", hexToHsl(designTokens.colors.text.primary))
-    root.style.setProperty("--border", hexToHsl(designTokens.colors.neutral[300]))
+    root.style.setProperty("--border", hexToHsl(borderColors.primary))
     root.style.setProperty("--input", hexToHsl(designTokens.colors.background.tertiary))
     root.style.setProperty("--ring", hexToHsl(designTokens.colors.primary[500]))
     
@@ -140,7 +157,7 @@ export function DesignSystemProvider({ children }: { children: React.ReactNode }
     root.style.setProperty("--sidebar-primary-foreground", hexToHsl(designTokens.colors.text.inverse))
     root.style.setProperty("--sidebar-accent", hexToHsl(designTokens.colors.background.tertiary))
     root.style.setProperty("--sidebar-accent-foreground", hexToHsl(designTokens.colors.text.primary))
-    root.style.setProperty("--sidebar-border", hexToHsl(designTokens.colors.neutral[300]))
+    root.style.setProperty("--sidebar-border", hexToHsl(borderColors.secondary))
     root.style.setProperty("--sidebar-ring", hexToHsl(designTokens.colors.primary[500]))
 
     // Apply to document body for immediate effect

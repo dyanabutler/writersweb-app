@@ -13,6 +13,12 @@ export interface DesignTokens {
       muted: string
       inverse: string
     }
+    // Border colors
+    border: {
+      primary: string
+      secondary: string
+      muted: string
+    }
     // Icon colors
     icons: {
       primary: string
@@ -176,6 +182,11 @@ export const defaultDesignTokens: DesignTokens = {
       secondary: "#e9ecef", // Off white
       muted: "#adb5bd", // Light gray
       inverse: "#0a0a0a", // Deep black
+    },
+    border: {
+      primary: "#495057", // Medium dark gray
+      secondary: "#6c757d", // Medium gray  
+      muted: "#343a40", // Darker gray
     },
     icons: {
       primary: "#e9ecef", // Off white
